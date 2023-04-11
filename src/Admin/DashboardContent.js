@@ -28,6 +28,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 
 import Orders from './Orders';
 import Customers from './Customers';
+import PressingsList from './PressingsList';
 // import Chart from './Chart';
 // import Deposits from './Deposits';
 
@@ -95,13 +96,9 @@ const mdTheme = createTheme();
 function DashboardContent() {
     const [component, setComponent] = useState(null);
 
-    const handleOrdersClick = () => {
-      setComponent(<Orders />);
-    };
-  
-    const handleCustomersClick = () => {
-      setComponent(<Customers />);
-    };
+    const handleClick = (name) => {
+      setComponent(name);
+    }
   
     const mainListItems = (
       <React.Fragment>
@@ -111,17 +108,23 @@ function DashboardContent() {
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItemButton>
-        <ListItemButton onClick={handleOrdersClick}>
+        <ListItemButton onClick={() => handleClick('orders')} >
           <ListItemIcon>
             <ShoppingCartIcon />
           </ListItemIcon>
           <ListItemText primary="Orders" />
         </ListItemButton>
-        <ListItemButton onClick={handleCustomersClick}>
+        <ListItemButton onClick={() => handleClick('customers')}>
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText primary="Customers"/>
+        </ListItemButton>
+        <ListItemButton onClick={() => handleClick('pressingnoactive')}>
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Pressings Request"/>
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
@@ -247,9 +250,11 @@ function DashboardContent() {
               {/* Recent Deposits */}
              
               {/* Recent Orders */}
-              <Grid item xs={12} md={9} lg={10} sx={{ display: 'flex', justifyContent: 'center'}}>
+              <Grid item xs={12} md={9} lg={12} sx={{ display: 'flex', justifyContent: 'center'}}>
                 <Paper sx={{ p: 2 }}>
-                    {component ? component : <Orders/>}
+                {component === 'orders' && <Orders />}
+                {component === 'pressingnoactive' && <PressingsList />}
+                {component === 'customers' && <Customers />}
                 </Paper>
             </Grid>
 

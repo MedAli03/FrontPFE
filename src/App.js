@@ -1,13 +1,14 @@
 
-import './App.css';
-import ResponsiveAppBar from './ResponsiveAppBar';
+import SignIn from './Auth/SignIn';
+
 
 
 function App() {
   return (
     <div className="App">
-     <ResponsiveAppBar/>
+     <SignIn/>
     </div>
+    
   );
 }
 
