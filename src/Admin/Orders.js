@@ -54,6 +54,8 @@ function preventDefault(event) {
 
 export default function Orders() {
   return (
+    <>
+    
     <React.Fragment>
       <Title>Recent Orders</Title>
       <Table size="string">
@@ -82,5 +84,6 @@ export default function Orders() {
         See more orders
       </Link>
     </React.Fragment>
+    </>
   );
 }

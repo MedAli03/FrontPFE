@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { useState } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import { ListItemButton, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
+import { ListItemButton, ListItemIcon, ListItemText, ListSubheader, Paper } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
@@ -14,7 +13,6 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -25,10 +23,15 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import {  Outlet } from 'react-router';
+import { useNavigate } from 'react-router-dom';
+import LogoutIcon from '@mui/icons-material/Logout';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import Collapse from '@mui/material/Collapse';
+import LocalLaundryServiceIcon from '@mui/icons-material/LocalLaundryService';
 
-import Orders from './Orders';
-import Customers from './Customers';
-import PressingsList from './PressingsList';
 // import Chart from './Chart';
 // import Deposits from './Deposits';
 
@@ -94,12 +97,29 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const mdTheme = createTheme();
 
 function DashboardContent() {
-    const [component, setComponent] = useState(null);
 
-    const handleClick = (name) => {
-      setComponent(name);
+
+ 
+
+  const navigate = useNavigate();
+
+    const handleOrdersClick = () => {
+      navigate('/admin/orders');
     }
-  
+    const handleCustomersClick = () => {
+      navigate('/admin/customers');
+    }
+
+    const [pressing, setPressing] = React.useState(false);
+    const [client, setClient] = React.useState(false);
+
+    const handlePressingClick = () => {
+      setPressing(!pressing);
+    }; 
+    const handleClientClick = () => {
+      setClient(!client);
+    };
+    
     const mainListItems = (
       <React.Fragment>
         <ListItemButton>
@@ -108,23 +128,57 @@ function DashboardContent() {
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItemButton>
-        <ListItemButton onClick={() => handleClick('orders')} >
-          <ListItemIcon>
-            <ShoppingCartIcon />
-          </ListItemIcon>
-          <ListItemText primary="Orders" />
-        </ListItemButton>
-        <ListItemButton onClick={() => handleClick('customers')}>
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Customers"/>
-        </ListItemButton>
-        <ListItemButton onClick={() => handleClick('pressingnoactive')}>
+        <ListItemButton onClick={handlePressingClick}>
+        <ListItemIcon>
+          <LocalLaundryServiceIcon />
+        </ListItemIcon>
+        <ListItemText primary="Pressings" />
+        {pressing ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={pressing} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton sx={{ pl: 4 }}>
+            <ListItemIcon>
+              <VerifiedUserIcon />
+            </ListItemIcon>
+            <ListItemText primary="Starred" />
+          </ListItemButton>
+          <ListItemButton sx={{ pl: 4 }}>
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText primary="Pressings Request"/>
+        </ListItemButton>
+        </List>
+      </Collapse>
+      <ListItemButton onClick={handleClientClick} >
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Clients"/>
+          {client ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={client} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton sx={{ pl: 4 }}>
+            <ListItemIcon>
+              <VerifiedUserIcon />
+            </ListItemIcon>
+            <ListItemText primary="Starred" />
+          </ListItemButton>
+          <ListItemButton sx={{ pl: 4 }} onClick={handleCustomersClick}>
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Pressings Request"/>
+        </ListItemButton>
+        </List>
+        </Collapse>
+        <ListItemButton  onClick={handleOrdersClick} >
+          <ListItemIcon>
+            <ShoppingCartIcon />
+          </ListItemIcon>
+          <ListItemText primary="Orders" />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
@@ -160,9 +214,9 @@ function DashboardContent() {
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <AssignmentIcon />
+            <LogoutIcon />
           </ListItemIcon>
-          <ListItemText primary="Year-end sale" />
+          <ListItemText primary="Sign Out" />
         </ListItemButton>
       </React.Fragment>
     );
@@ -245,18 +299,13 @@ function DashboardContent() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* Chart */}
               
-              {/* Recent Deposits */}
-             
               {/* Recent Orders */}
               <Grid item xs={12} md={9} lg={12} sx={{ display: 'flex', justifyContent: 'center'}}>
-                <Paper sx={{ p: 2 }}>
-                {component === 'orders' && <Orders />}
-                {component === 'pressingnoactive' && <PressingsList />}
-                {component === 'customers' && <Customers />}
+                <Paper >
+                  <Outlet/>
                 </Paper>
-            </Grid>
+              </Grid>
 
             </Grid>
             <Copyright sx={{ pt: 4 }} />
