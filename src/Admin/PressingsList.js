@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+
 import {
   Table,
   TableBody,
@@ -9,18 +9,24 @@ import {
   TableRow,
   Paper,
 } from '@mui/material';
+import axiosClient from '../axios';
 
 function PressingsList() {
   const [pressings, setPressings] = useState([]);
 
-  useEffect(() => {
+useEffect(() => {
+  const getPressings = async () => {
     try {
-      const response = axios.get('http://127.0.0.1:8000/api/admin/pressingnoactive');
+      const response = await axiosClient.get('/admin/pressingnoactive');
       setPressings(response.data);
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  };
+
+  getPressings();
+}, []);
+
 
   return (
     <div>
@@ -35,10 +41,10 @@ function PressingsList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {pressings.map((pressing) => (
+          {pressings.map(pressing => (
               <TableRow key={pressing.id}>
-                <TableCell>{pressing.email}</TableCell>
-                <TableCell>{pressing.location}</TableCell>
+                <TableCell>{pressing.tva}</TableCell>
+                <TableCell>{pressing.country}</TableCell>
                 <TableCell>{pressing.email}</TableCell>
               </TableRow>
             ))}

@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import axios from 'axios';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,6 +12,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axiosClient from '../axios';
+import { Navigate } from 'react-router';
+import { UserStateContext } from '../Contexts/ContextProvider';
+
+
 
 const theme = createTheme();
 
@@ -29,21 +33,24 @@ function Copyright(props) {
     );
   }
 export default function SingUP() {
-    const [formData, setFormData] = useState({
-        email: '',
-        cin: '',
-        phone: '',
-        password: '',
-        address: '',
-        city: '',
-        country: '',
-        postal_code: '',
-        first_name: '',
-        last_name: '',
-        role: 'client',
 
-      });
-      
+
+
+  const initialFormData = {
+    role: 'client',
+    email: '',
+    cin: '',
+    phone: '',
+    password: '',
+    address: '',
+    city: '',
+    country: '',
+    postal_code: '',
+    first_name: '',
+    last_name: '',
+  };
+  const [formData, setFormData] = useState(initialFormData);
+  const { userToken } = UserStateContext();    
       const handleChange = (event) => {
         setFormData({
           ...formData,
@@ -55,9 +62,13 @@ export default function SingUP() {
         event.preventDefault();
       
         try {
-           await axios.post('http://127.0.0.1:8000/api/register', formData);
+           await axiosClient.post('/register', formData);
       
           console.log('Registration successful');
+          // Reset form state
+          setFormData(initialFormData);
+          window.location.href = "/login"
+
         } catch (error) {
           if (error.response.status === 400) {
             console.log('Validation error:', error.response.data.errors);
@@ -66,6 +77,11 @@ export default function SingUP() {
           }
         }
       };
+
+      if (userToken) {
+        return <Navigate to="/admin" />
+      }
+      
   return (
 <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -86,26 +102,44 @@ export default function SingUP() {
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  required
-                  fullWidth
-                  id="firstname"
-                  label="First Name"
-                  name="firstName"
-                  autoFocus
-                  value={formData.first_name}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6}>
               <TextField
+                autoComplete="given-name"
+                required
+                fullWidth
+                id="firstname"
+                label="First Name"
+                name="first_name"
+                autoFocus
+                value={formData.first_name}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                fullWidth
+                id="lastname"
                 label="Last Name"
+                name="last_name"
+                autoComplete="family-name"
                 value={formData.last_name}
                 onChange={handleChange}
-                />
-              </Grid>
+              />
+            </Grid>
+            {/* <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="cin"
+                label="CIN"
+                name="cin"
+                type="number"
+                autoComplete="family-name"
+                value={formData.cin}
+                onChange={handleChange}
+              />
+            </Grid> */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -113,7 +147,7 @@ export default function SingUP() {
                   id="address"
                   label="Address"
                   name="address"
-                  autoComplete="family-name"
+                  autoComplete="address-line1"
                   value={formData.address}
                   onChange={handleChange}
                 />
@@ -148,7 +182,7 @@ export default function SingUP() {
                   fullWidth
                   id="postal-code"
                   label="Postal code"
-                  name="postal-code"
+                  name="postal_code"
                   type="number"
                   autoComplete="family-name"
                   value={formData.postal_code}
@@ -163,7 +197,7 @@ export default function SingUP() {
                   label="Phone"
                   name="phone"
                   type="number"
-                  autoComplete="family-name"
+                  autoComplete="tel"
                   value={formData.phone}
                   onChange={handleChange}
                 />
@@ -192,18 +226,6 @@ export default function SingUP() {
                   value={formData.password}
                   onChange={handleChange}
                 />
-                <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="phone"
-                  label="Phone"
-                  name="phone"
-                  autoComplete="family-name"
-                  value="client"
-                  onChange={handleChange}
-                />
-              </Grid>
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
@@ -222,7 +244,7 @@ export default function SingUP() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/login" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

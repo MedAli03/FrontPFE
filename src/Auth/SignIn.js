@@ -13,9 +13,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
-import axios from 'axios';
-import { BrowserRouter as Router, Route ,Routes} from 'react-router-dom';
-import Orders from '../Admin/Orders';
+import { UserStateContext } from '../Contexts/ContextProvider';
+import axiosClient from '../axios';
+import { Navigate } from 'react-router';
 
 function Copyright(props) {
   return (
@@ -33,15 +33,10 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
-  <Router>
 
-    <Routes>
-    <Route path="/orders" element={<Orders />}  />
-    </Routes>
+  const { setCurrentUser, setUserToken } = UserStateContext();
+  const { userToken } = UserStateContext();
 
-  </Router>
-
-  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -56,32 +51,32 @@ export default function SignIn() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const response = await axios.post('http://127.0.0.1:8000/api/login', {
-        email: email,
-        password: password,
-      });
+      await axiosClient.post("/login", {
+        email,
+        password,
+        
+      }).then(({data}) => {
+        setCurrentUser(data.user);
+        setUserToken(data.access_token);
 
-      localStorage.setItem('access_token', response.data.access_token);
-
-
-      localStorage.setItem('role', response.data.role);
-      
-      if (response.data.role === "admin") {
-        window.location.href = "/orders";
-      }
-    } catch (error) {
+     
+      }).catch((error) => {
       if (error.response.status === 401) {
         console.log('Invalid email or password');
       } else if (error.response.status === 403) {
         console.log('Account is inactive');
       } else {
         console.log('An error occurred:', error);
-      }
-    }
-  };
-  
+      }}
+      )
+    
+    };
 
+   
+      if (userToken) {
+        return <Navigate to="/admin" />
+      }
+      
 
   return (
     <ThemeProvider theme={theme}>
@@ -111,6 +106,7 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              value={email}
               onChange={handleEmailChange}
             />
             <TextField
@@ -121,6 +117,7 @@ export default function SignIn() {
               label="Password"
               type="password"
               id="password"
+              value={password}
               autoComplete="current-password"
               onChange={handlePasswordChange}
             />
@@ -143,7 +140,7 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

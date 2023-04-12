@@ -23,7 +23,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import {  Outlet } from 'react-router';
+import { Navigate, Outlet } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -31,6 +31,8 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import Collapse from '@mui/material/Collapse';
 import LocalLaundryServiceIcon from '@mui/icons-material/LocalLaundryService';
+import { UserStateContext } from '../Contexts/ContextProvider';
+import axiosClient from '../axios';
 
 // import Chart from './Chart';
 // import Deposits from './Deposits';
@@ -97,11 +99,20 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const mdTheme = createTheme();
 
 function DashboardContent() {
-
-
- 
-
+  const { setCurrentUser, setUserToken } = UserStateContext();
+  const { userToken } =UserStateContext();
+  const [pressing, setPressing] = React.useState(false);
+  const [client, setClient] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
+  const toggleDrawer = () => {
+    setOpen(!open);
+  };
   const navigate = useNavigate();
+
+
+  if(!userToken) {
+     return <Navigate to={'/login'} />
+  }
 
     const handleOrdersClick = () => {
       navigate('/admin/orders');
@@ -109,17 +120,30 @@ function DashboardContent() {
     const handleCustomersClick = () => {
       navigate('/admin/customers');
     }
-
-    const [pressing, setPressing] = React.useState(false);
-    const [client, setClient] = React.useState(false);
-
+    const handlePressingRequestClick = () => {
+      navigate('/admin/pressingrequest');
+    }
     const handlePressingClick = () => {
       setPressing(!pressing);
     }; 
     const handleClientClick = () => {
       setClient(!client);
     };
-    
+
+    const logout = () => {
+       axiosClient.post('/logout', null, {
+        headers: {
+          'Authorization': `Bearer ${userToken}`
+        }
+      }).then(response => {
+        setUserToken(null);
+        setCurrentUser({});
+        window.location.href = "/login"
+      }).catch(error => {
+        console.log('An error occurred:', error);
+      });
+      
+    }
     const mainListItems = (
       <React.Fragment>
         <ListItemButton>
@@ -166,7 +190,7 @@ function DashboardContent() {
             </ListItemIcon>
             <ListItemText primary="Starred" />
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }} onClick={handleCustomersClick}>
+          <ListItemButton sx={{ pl: 4 }} onClick={handlePressingRequestClick}>
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
@@ -212,7 +236,7 @@ function DashboardContent() {
           </ListItemIcon>
           <ListItemText primary="Last quarter" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton onClick={logout}>
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>
@@ -221,10 +245,7 @@ function DashboardContent() {
       </React.Fragment>
     );
 
-  const [open, setOpen] = React.useState(true);
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+
 
   return (
     <ThemeProvider theme={mdTheme}>
