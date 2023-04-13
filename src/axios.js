@@ -6,7 +6,7 @@ const axiosClient = axios.create({
 })
 
 axiosClient.interceptors.request.use((config) => {
-    const token = localStorage.getItem('access_token')
+    const token = localStorage.getItem('token')
     config.headers.Authorization = `Bearer ${token}`
     return config
 })
@@ -15,7 +15,7 @@ axiosClient.interceptors.response.use(response =>{
     return response;
 },error => {
     if(error.response && error.response.status === 401){
-        router.navigate('/auth')
+        router.navigate('/login')
         return error;
     }
 

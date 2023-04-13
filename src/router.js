@@ -5,6 +5,8 @@ import SignUp from "./Auth/SingUP";
 import Orders from "./Admin/Orders";
 import Customers from "./Admin/Customers"
 import PressingsList from "./Admin/PressingsList";
+import ClientsList from "./Admin/ClientsList";
+import Article from "./Admin/Article";
 const router = createBrowserRouter([
     {
         path: '/admin',
@@ -17,24 +19,34 @@ const router = createBrowserRouter([
             {
                 path: 'customers',
                 element: <Customers />
+
             },
             {
                 path: 'pressingrequest',
                 element: <PressingsList />
+            },
+            {
+                path: 'clients',
+                element: <ClientsList />
+            },
+            {
+                path: 'vêtements',
+                element: <Article />
             }
+
 
         ]
     },
 
-    {
-        path: '/login',
+    {   
+        path : '/login',
         element: <SignIn/>
     },
     {  
         path: '/register',
         element: <SignUp/>
-    }
-
+    },
+    
     
 ])
 

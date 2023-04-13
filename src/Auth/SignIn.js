@@ -36,7 +36,7 @@ export default function SignIn() {
 
   const { setCurrentUser, setUserToken } = UserStateContext();
   const { userToken } = UserStateContext();
-
+  const { userRole , setUserRole} = UserStateContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -58,7 +58,7 @@ export default function SignIn() {
       }).then(({data}) => {
         setCurrentUser(data.user);
         setUserToken(data.access_token);
-
+        setUserRole(data.role);
      
       }).catch((error) => {
       if (error.response.status === 401) {
@@ -73,7 +73,7 @@ export default function SignIn() {
     };
 
    
-      if (userToken) {
+      if (userToken && userRole === 'admin') {
         return <Navigate to="/admin" />
       }
       

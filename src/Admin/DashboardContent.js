@@ -18,10 +18,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
+import CheckroomIcon from '@mui/icons-material/Checkroom';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { Navigate, Outlet } from 'react-router';
 import { useNavigate } from 'react-router-dom';
@@ -114,14 +114,17 @@ function DashboardContent() {
      return <Navigate to={'/login'} />
   }
 
-    const handleOrdersClick = () => {
-      navigate('/admin/orders');
-    }
-    const handleCustomersClick = () => {
-      navigate('/admin/customers');
+    // const handleOrdersClick = () => {
+    //   navigate('/admin/orders');
+    // }
+    const handleArticlesClick = () => {
+      navigate('/admin/vêtements');
     }
     const handlePressingRequestClick = () => {
       navigate('/admin/pressingrequest');
+    }
+    const handleclientsClick = () => {
+      navigate('/admin/clients');
     }
     const handlePressingClick = () => {
       setPressing(!pressing);
@@ -167,7 +170,7 @@ function DashboardContent() {
             </ListItemIcon>
             <ListItemText primary="Starred" />
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }}>
+          <ListItemButton sx={{ pl: 4 }} onClick={handlePressingRequestClick}>
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
@@ -190,19 +193,19 @@ function DashboardContent() {
             </ListItemIcon>
             <ListItemText primary="Starred" />
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }} onClick={handlePressingRequestClick}>
+          <ListItemButton sx={{ pl: 4 }} onClick={handleclientsClick}>
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
-          <ListItemText primary="Pressings Request"/>
+          <ListItemText primary="Liste des clients"/>
         </ListItemButton>
         </List>
         </Collapse>
-        <ListItemButton  onClick={handleOrdersClick} >
+        <ListItemButton  onClick={handleArticlesClick} >
           <ListItemIcon>
-            <ShoppingCartIcon />
+            <CheckroomIcon />
           </ListItemIcon>
-          <ListItemText primary="Orders" />
+          <ListItemText primary="vêtements" />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
@@ -319,10 +322,10 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
+            <Grid container >
               
               {/* Recent Orders */}
-              <Grid item xs={12} md={9} lg={12} sx={{ display: 'flex', justifyContent: 'center'}}>
+              <Grid item xs={12} md={9} lg={12} sx={{ display: 'flex', justifyContent: 'center',width: '100%'}}>
                 <Paper >
                   <Outlet/>
                 </Paper>
