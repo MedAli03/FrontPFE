@@ -75,6 +75,8 @@ export default function SignIn() {
    
       if (userToken && userRole === 'admin') {
         return <Navigate to="/admin" />
+      }else if(userToken && userRole === 'pressing'){
+        return <Navigate to="/pressingdashboard" />
       }
       
 
