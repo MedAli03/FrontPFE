@@ -13,7 +13,6 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -26,23 +25,24 @@ import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import ThumbsUpDownIcon from '@mui/icons-material/ThumbsUpDown';
 import { UserStateContext } from '../Contexts/ContextProvider';
+import PaidTwoToneIcon from '@mui/icons-material/PaidTwoTone';
 import axiosClient from '../axios';
 
 // import Chart from './Chart';
 // import Deposits from './Deposits';
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+// function Copyright(props) {
+//   return (
+//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
+//       {'Copyright © '}
+//       <Link color="inherit" href="https://mui.com/">
+//         Your Website
+//       </Link>{' '}
+//       {new Date().getFullYear()}
+//       {'.'}
+//     </Typography>
+//   );
+// }
 
 const drawerWidth = 240;
 
@@ -122,6 +122,9 @@ function PressingDashboard() {
     const handleServicesClick = () => {
       navigate('/pressingdashboard/services');
     }
+    const handleTarifClick = () => {
+      navigate('/pressingdashboard/tarif');
+    }
 
     // const handleClientClick = () => {
     //   setClient(!client);
@@ -170,6 +173,13 @@ function PressingDashboard() {
             <CheckroomIcon />
           </ListItemIcon>
           <ListItemText primary="Vêtements"/>
+      </ListItemButton>
+
+      <ListItemButton onClick={handleTarifClick} >
+          <ListItemIcon>
+            <PaidTwoToneIcon />
+          </ListItemIcon>
+          <ListItemText primary="Tarif"/>
       </ListItemButton>
 
       <ListItemButton  onClick={handleNotaionsClick} >
@@ -277,7 +287,7 @@ function PressingDashboard() {
               </Grid>
 
             </Grid>
-            <Copyright sx={{ pt: 4 }} />
+            {/* <Copyright sx={{ pt: 4 }} /> */}
           </Container>
         </Box>
       </Box>

@@ -17,7 +17,6 @@ import { Navigate } from 'react-router';
 import { UserStateContext } from '../Contexts/ContextProvider';
 
 
-
 const theme = createTheme();
 
 function Copyright(props) {
@@ -37,7 +36,7 @@ export default function SingUP() {
 
 
   const initialFormData = {
-    role: 'client',
+    role: 'pressing',
     email: '',
     cin: '',
     phone: '',
@@ -46,8 +45,8 @@ export default function SingUP() {
     city: '',
     country: '',
     postal_code: '',
-    first_name: '',
-    last_name: '',
+    pressing_name: '',
+    tva: '',
   };
   const [formData, setFormData] = useState(initialFormData);
   const { userToken } = UserStateContext();    
@@ -57,6 +56,7 @@ export default function SingUP() {
           [event.target.name]: event.target.value
         });
       };
+
       
       const handleSubmit = async (event) => {
         event.preventDefault();
@@ -81,6 +81,8 @@ export default function SingUP() {
       if (userToken) {
         return <Navigate to="/admin" />
       }
+
+      
       
   return (
 <ThemeProvider theme={theme}>
@@ -107,11 +109,11 @@ export default function SingUP() {
                 autoComplete="given-name"
                 required
                 fullWidth
-                id="firstname"
-                label="First Name"
-                name="first_name"
+                id="pressingname"
+                label="Nom de pressing"
+                name="pressing_name"
                 autoFocus
-                value={formData.first_name}
+                value={formData.pressing_name}
                 onChange={handleChange}
               />
             </Grid>
@@ -119,11 +121,12 @@ export default function SingUP() {
               <TextField
                 required
                 fullWidth
-                id="lastname"
-                label="Last Name"
-                name="last_name"
+                type="number"
+                id="tva"
+                label="TVA"
+                name="tva"
                 autoComplete="family-name"
-                value={formData.last_name}
+                value={formData.tva}
                 onChange={handleChange}
               />
             </Grid>

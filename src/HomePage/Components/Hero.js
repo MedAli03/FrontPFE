@@ -45,18 +45,19 @@ const Hero = () => {
                 mb: 4,
               }}
             >
-              Welcome to Besnik Agency
+              Bienvenue sur Washify
             </Typography>
-            <Title variant="h1">
-              Discover a place where you'll love to live.
+            <Title variant="h1" sx={{ fontSize: '2rem' }}>
+            La façon la plus simple de réserver un service de nettoyage de vêtements à proximité de chez vous.
             </Title>
-            <Typography
+
+            {/* <Typography
               variant="body2"
               sx={{ fontSize: "18px", color: "#5A6473", my: 4 }}
             >
               Be the first to get the best real estate deals before they hit the
               mass market! Hot foreclosure deals with one simple search!
-            </Typography>
+            </Typography> */}
 
           </Box>
 

@@ -6,6 +6,7 @@ import MiscellaneousServicesIcon from "@mui/icons-material/MiscellaneousServices
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import HomeIcon from "@mui/icons-material/Home";
 import ContactsIcon from "@mui/icons-material/Contacts";
+import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import logoImg from "../media/logo.png";
 import { Container } from "@mui/system";
 
@@ -45,24 +46,22 @@ export const Navbar = () => {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List>
-        {["Home", "Features", "Services", "Listed", "Contact"].map(
-          (text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index === 0 && <HomeIcon />}
-                  {index === 1 && <FeaturedPlayListIcon />}
-                  {index === 2 && <MiscellaneousServicesIcon />}
-                  {index === 3 && <ListAltIcon />}
-                  {index === 4 && <ContactsIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          )
-        )}
-      </List>
+  <List>
+    {["Accueil", "Services", "Contact", "Devenir partenaire"].map((text, index) => (
+      <ListItem key={text} disablePadding>
+        <ListItemButton component={Link} href={index === 0 ? '/' : index === 1 ? '/services' : index === 2 ? '/contact' : '/register'}>
+          <ListItemIcon>
+            {index === 0 && <HomeIcon />}
+            {index === 1 && <ListAltIcon />}
+            {index === 2 && <ContactsIcon />}
+            {index === 3 && <AccountCircleTwoToneIcon />}
+          </ListItemIcon>
+          <ListItemText primary={text} />
+        </ListItemButton>
+      </ListItem>
+    ))}
+  </List>
+
     </Box>
   );
 
@@ -135,11 +134,11 @@ export const Navbar = () => {
         </Box>
 
         <NavbarLinksBox>
-          <NavLink underline="none" variant="body2">Home</NavLink>
-          <NavLink underline="none" variant="body2">Features</NavLink>
+          <NavLink underline="none" variant="body2">Accueil </NavLink>
           <NavLink underline="none" variant="body2">Services</NavLink>
-          <NavLink underline="none" variant="body2">Listed</NavLink>
           <NavLink underline="none" href="/contact" variant="body2">Contact</NavLink>
+          <NavLink underline="none" href="/register" variant="body2">Devenir un partenaire</NavLink>
+
         </NavbarLinksBox>
       </Box>
 
@@ -152,8 +151,8 @@ export const Navbar = () => {
         }}
       >
         <Button sx={{textTransform: 'none'}} href="/login" variant="body2">Sign In</Button>
-        <Button sx={{textTransform: 'none',backgroundColor: "#000339",border: "2px solid transparent",borderRadius: "7px",}} 
-        href="/register" variant="contained">register</Button>
+        {/* <Button sx={{textTransform: 'none',backgroundColor: "#000339",border: "2px solid transparent",borderRadius: "7px",}} 
+        href="/register" variant="contained">register</Button> */}
       
       </Box>
     </NavbarContainer>

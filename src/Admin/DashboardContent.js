@@ -22,18 +22,18 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import CheckroomIcon from '@mui/icons-material/Checkroom';
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { Navigate, Outlet } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import Collapse from '@mui/material/Collapse';
 import LocalLaundryServiceIcon from '@mui/icons-material/LocalLaundryService';
 import { UserStateContext } from '../Contexts/ContextProvider';
 import axiosClient from '../axios';
-
+import AddTaskIcon from '@mui/icons-material/AddTask';
+import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 // import Chart from './Chart';
 // import Deposits from './Deposits';
 
@@ -123,6 +123,15 @@ function DashboardContent() {
     const handlePressingRequestClick = () => {
       navigate('/admin/pressingrequest');
     }
+    const handlePressingAccountsClick = () => {
+      navigate('/admin/comptespressing');
+    }
+    const handleServiceClick = () => {
+      navigate('/admin/services');
+    }
+    const handleSettingsClick = () => {
+      navigate('/admin/settings');
+    }
     const handleclientsClick = () => {
       navigate('/admin/clients');
     }
@@ -148,6 +157,8 @@ function DashboardContent() {
       
     }
 
+
+
     const mainListItems = (
       <React.Fragment>
         <ListItemButton>
@@ -165,17 +176,17 @@ function DashboardContent() {
       </ListItemButton>
       <Collapse in={pressing} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon>
-              <VerifiedUserIcon />
-            </ListItemIcon>
-            <ListItemText primary="Starred" />
-          </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }} onClick={handlePressingRequestClick}>
+          <ListItemButton sx={{ pl: 4 }} onClick={handlePressingAccountsClick}>
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
-          <ListItemText primary="Pressings Request"/>
+          <ListItemText primary="Comptes"/>
+        </ListItemButton>
+        <ListItemButton sx={{ pl: 4 }} onClick={handlePressingRequestClick}>
+          <ListItemIcon>
+            <AddTaskIcon />
+          </ListItemIcon>
+          <ListItemText primary="Demandes"/>
         </ListItemButton>
         </List>
       </Collapse>
@@ -188,12 +199,6 @@ function DashboardContent() {
         </ListItemButton>
         <Collapse in={client} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon>
-              <VerifiedUserIcon />
-            </ListItemIcon>
-            <ListItemText primary="Starred" />
-          </ListItemButton>
           <ListItemButton sx={{ pl: 4 }} onClick={handleclientsClick}>
           <ListItemIcon>
             <PeopleIcon />
@@ -207,6 +212,12 @@ function DashboardContent() {
             <CheckroomIcon />
           </ListItemIcon>
           <ListItemText primary="vêtements" />
+        </ListItemButton>
+        <ListItemButton  onClick={handleServiceClick} >
+          <ListItemIcon>
+            <HandshakeOutlinedIcon />
+          </ListItemIcon>
+          <ListItemText primary="services" />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
@@ -225,20 +236,11 @@ function DashboardContent() {
   
     const secondaryListItems = (
       <React.Fragment>
-        <ListSubheader component="div" inset>
-          Saved reports
-        </ListSubheader>
-        <ListItemButton>
+        <ListItemButton onClick={handleSettingsClick} >
           <ListItemIcon>
-            <AssignmentIcon />
+            <SettingsIcon />
           </ListItemIcon>
-          <ListItemText primary="Current month" />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <AssignmentIcon />
-          </ListItemIcon>
-          <ListItemText primary="Last quarter" />
+          <ListItemText primary="Settings" />
         </ListItemButton>
         <ListItemButton onClick={logout}>
           <ListItemIcon>

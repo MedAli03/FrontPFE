@@ -10,10 +10,14 @@ import Article from "./Admin/Article";
 import Home from "./HomePage/Home";
 import SignUpPressing from "./Auth/SignUpPressing";
 import PressingDashboard from "./Pressing/PressingDashboard";
-import OurArticles from "./Pressing/OurArticles";
+import OurArticles from "./Pressing/Articles";
 import Services from "./Pressing/Services";
+import ServiceAdmin from "./Admin/Services";
 import Ratings from "./Pressing/Ratings";
 import Commandes from "./Pressing/Commandes";
+import PressingAccounts from "./Admin/PressingAccounts";
+import Tarif from "./Pressing/Tarif";
+import Settings from "./Admin/Settings";
 const router = createBrowserRouter([
     {
         path: '/admin',
@@ -33,14 +37,27 @@ const router = createBrowserRouter([
                 element: <PressingsList />
             },
             {
+                path: 'comptespressing',
+                element: <PressingAccounts />
+            },
+            {
                 path: 'clients',
                 element: <ClientsList />
             },
             {
                 path: 'vêtements',
                 element: <Article />
+            },
+            {
+                path: 'services',
+                element: <ServiceAdmin />
+            },
+            {
+                path: 'settings',
+                element: <Settings />
             }
 
+            
 
         ]
     },
@@ -50,7 +67,9 @@ const router = createBrowserRouter([
         children: [
             {
                 path: 'commandes',
-                element: <Commandes />
+                element: <Commandes />,
+
+                
             },
             {
                 path: 'services',
@@ -65,7 +84,10 @@ const router = createBrowserRouter([
                 path: 'notation',
                 element: <Ratings />
             },
-
+            {
+                path: 'tarif',
+                element: <Tarif />
+            }
 
         ]
     },
