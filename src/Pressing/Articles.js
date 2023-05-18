@@ -54,38 +54,111 @@ function Articles() {
 
 
   return (
-    <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2} sx={{minWidth:950,minHeight:450}}>
-    <Box gridColumn="span 6" sx={{my:2 , mx:2,backgroundColor:'#eeeeee' ,maxHeight:450,overflow: 'auto'}}>
-      <Item sx={{mt:1,mx:1,position: "sticky", top: 3}}><Typography sx={{}}>Liste de vêtements : </Typography></Item>
-      
-      {articles.map((article) => (
-        <Item key={article.id} sx={{my:2,mx:1,backgroundColor:'#b388ff',color:'white' }}>{article.name}</Item>
-      ))}
+<Box
+  display="grid"
+  gridTemplateColumns="repeat(12, 1fr)"
+  gap={2}
+  sx={{
+    minWidth: 320,
+    minHeight: 450,
+    '@media screen and (min-width: 600px)': {
+      minWidth: 600,
+    },
+    '@media screen and (min-width: 950px)': {
+      minWidth: 950,
+    },
+  }}
+>
+  <Box
+    gridColumn={{ xs: '1 / -1', md: 'span 6' }}
+    sx={{
+      my: 2,
+      mx: 2,
+      backgroundColor: '#F5F5F5',
+      maxHeight: 450,
+      overflow: 'auto',
+      borderRadius: 5,
+      boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+    }}
+  >
+    <Item sx={{ mt: 1, mx: 1, position: 'sticky', top: 3 }}>
+      <Typography variant="h5" sx={{ color: '#424242' }}>
+        Liste des vêtements
+      </Typography>
+    </Item>
 
-    </Box>
-    <Box gridColumn="span 6" sx={{my:2 , mx:2}}>
-      <Item sx={{my:2,mx:1}}>vous voulez ajouter un autre vêtement ?</Item>
-      <Item sx={{my:2,mx:1,display:'flex',alignItems:'center'}}>
-        <TextField
-          sx={{width:400,mx:2}}
-          required
-          label="nom de vêtement"
-          value={name}
-          onChange={handleInputChange}
-        />
-        <Button onClick={handleSubmit} variant="contained" endIcon={<SendIcon />} sx={{height:40}}>
-        Envoyer
-        </Button>
+    {articles.length > 0 ? (
+      articles.map((article) => (
+        <Item
+          key={article.id}
+          sx={{
+            my: 2,
+            mx: 1,
+            backgroundColor: '#FFFFFF',
+            color: '#424242',
+            borderRadius: 5,
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+          }}
+        >
+          <Typography variant="subtitle1">{article.name}</Typography>
+        </Item>
+      ))
+    ) : (
+      <Item sx={{ mx: 1, my: 2 }}>
+        <Typography variant="subtitle1" sx={{ color: '#424242' }}>
+          Aucun vêtement trouvé.
+        </Typography>
       </Item>
-      <Snackbar
-        open={isSnackbarOpen}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-        message="Votre demande a été envoyer avec succès !"
-      />
-      
-    </Box>
+    )}
   </Box>
+
+  <Box
+    gridColumn={{ xs: '1 / -1', md: 'span 6' }}
+    sx={{ my: 2, mx: 2, borderRadius: 5, boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
+  >
+    <Item sx={{ my: 2, mx: 1 }}>
+      <Typography variant="h5" sx={{ color: '#424242' }}>
+        Ajouter un vêtement
+      </Typography>
+    </Item>
+
+    <Item sx={{ my: 2, mx: 1, display: 'flex', alignItems: 'center' }}>
+      <TextField
+        sx={{ width: '100%', maxWidth: 400, mx: 2 }}
+        required
+        label="Nom de vêtement"
+        value={name}
+        onChange={handleInputChange}
+        variant="outlined"
+      />
+
+      <Button
+        onClick={handleSubmit}
+        variant="contained"
+        endIcon={<SendIcon />}
+        sx={{
+          height: 40,
+          color: '#FFFFFF',
+          backgroundColor: '#424242',
+          ml: { xs: 1, md: 2 },
+          mt: { xs: 1, md: 0 },
+        }}
+      >
+        Envoyer
+      </Button>
+    </Item>
+
+    <Snackbar
+      open={isSnackbarOpen}
+      autoHideDuration={3000}
+      onClose={handleSnackbarClose}
+      message="Votre demande a été envoyée avec succès !"
+      sx={{ backgroundColor: '#43A047' }}
+    />
+  </Box>
+</Box>
+
+
   )
 }
 

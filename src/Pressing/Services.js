@@ -65,40 +65,101 @@ function Services() {
 
 
   return (
-    <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2} sx={{minWidth:950,minHeight:450}}>
-    <Box gridColumn="span 6" sx={{my:2 , mx:2,backgroundColor:'#eeeeee' ,maxHeight:450,overflow: 'auto'}}>
-      <Item sx={{mt:1,mx:1,position: "sticky", top: 0}}><Typography sx={{}}>Les service disponibles : </Typography></Item>
-      
-      {services.map(service => (
-        <Item key={service.id} sx={{my:2,mx:1,backgroundColor:'#b388ff',color:'white' }}>{service.name}</Item>
+    <Box
+    display="grid"
+    gridTemplateColumns={{ xs: "1fr", md: "repeat(12, 1fr)" }}
+    gap={2}
+    sx={{ py: 2, px: { xs: 2, md: 8 }, backgroundColor: "#F5F5F5" }}
+  >
+    <Box
+      gridColumn={{ xs: "1 / -1", md: "span 6" }}
+      sx={{
+        p: 4,
+        maxHeight: 450,
+        overflow: "auto",
+        borderRadius: 8,
+        backgroundColor: "#FFFFFF",
+        boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.06)",
+      }}
+    >
+      <Typography variant="h5" sx={{ mb: 4, color: "#3F51B5" }}>
+        Les services disponibles
+      </Typography>
+      {services.map((service) => (
+        <Box
+          key={service.id}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            mb: 2,
+            height: 60,
+            borderRadius: 8,
+            backgroundColor: "#3F51B5",
+            color: "#FFFFFF",
+            fontSize: 20,
+            fontWeight: 500,
+          }}
+        >
+          {service.name}
+        </Box>
       ))}
-      
     </Box>
-    <Box gridColumn="span 6" sx={{my:2 , mx:2}}>
-      <Item sx={{my:2,mx:1}}>vous voulez ajouter un autre service ?</Item>
-      <Item sx={{my:2,mx:1,display:'flex',alignItems:'center'}}>
+    <Box gridColumn={{ xs: "1 / -1", md: "span 6" }} sx={{ p: 4 }}>
+      <Typography variant="h5" sx={{ mb: 4, color: "#3F51B5" }}>
+        Ajouter un nouveau service
+      </Typography>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          p: 4,
+          borderRadius: 8,
+          backgroundColor: "#FFFFFF",
+          boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.06)",
+        }}
+      >
         <TextField
-          sx={{width:400,mx:2}}
           required
-          label="nom de service"
+          label="Nom de service"
+          variant="outlined"
+          sx={{ width: "100%", mb: 4 }}
           value={name}
           onChange={handleInputChange}
         />
-        <Button onClick={handleSubmit} variant="contained" endIcon={<SendIcon />} sx={{height:40}}>
-        Envoyer
+        <Button
+          type="submit"
+          variant="contained"
+          endIcon={<SendIcon />}
+          sx={{
+            height: 48,
+            width: "100%",
+            backgroundColor: "#3F51B5",
+            color: "#FFFFFF",
+            fontWeight: 500,
+            fontSize: 18,
+            mt: 2,
+          }}
+        >
+          Envoyer
         </Button>
-      </Item>
-        <Snackbar
+      </Box>
+      <Snackbar
         open={isSnackbarOpen}
         autoHideDuration={3000}
         onClose={handleSnackbarClose}
-        message="Votre demande a été envoyer avec succès !"
+        message="Votre demande a été envoyée avec succès !"
+        sx={{ mt: 4 }}
       />
-
-      
     </Box>
   </Box>
   
+  
+
   )
 }
 

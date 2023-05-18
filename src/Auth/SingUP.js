@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -15,25 +13,27 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axiosClient from '../axios';
 import { Navigate } from 'react-router';
 import { UserStateContext } from '../Contexts/ContextProvider';
-
+import * as yup from 'yup';
+import { FormHelperText } from '@mui/material';
 
 const theme = createTheme();
 
-function Copyright(props) {
-    return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
-        {'Copyright © '}
-        <Link color="inherit" href="https://mui.com/">
-          Your Website
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
+
 export default function SingUP() {
+  const [formErrors, setFormErrors] = useState({});
 
-
+  const schema = yup.object().shape({
+    pressing_name: yup.string().required('Name is required'),
+    tva: yup.number().required('TVA is required'),
+    address: yup.string().required('Address is required'),
+    city: yup.string().required('City is required'),
+    country: yup.string().required('Country is required'),
+    postal_code: yup.number().required('Postal code is required'),
+    phone: yup.number().min(8, 'Phone must be at least 8 numbers').required('Phone number is required'),
+    email: yup.string().email('Invalid email').required('Email is required'),
+    password: yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+  });
+  
 
   const initialFormData = {
     role: 'pressing',
@@ -58,25 +58,30 @@ export default function SingUP() {
       };
 
       
-      const handleSubmit = async (event) => {
-        event.preventDefault();
-      
-        try {
-           await axiosClient.post('/register', formData);
-      
-          console.log('Registration successful');
-          // Reset form state
-          setFormData(initialFormData);
-          window.location.href = "/login"
+const handleSubmit = async (event) => {
+  event.preventDefault();
 
-        } catch (error) {
-          if (error.response.status === 400) {
-            console.log('Validation error:', error.response.data.errors);
-          } else {
-            console.log('An error occurred:', error);
-          }
-        }
-      };
+  try {
+    await schema.validate(formData, { abortEarly: false });
+    await axiosClient.post('/register', formData);
+
+    console.log('Registration successful');
+    // Reset form state
+    setFormData(initialFormData);
+    window.location.href = "/login";
+  } catch (error) {
+    if (error instanceof yup.ValidationError) {
+      const errors = {};
+      error.inner.forEach((e) => {
+        errors[e.path] = e.message;
+      });
+      setFormErrors(errors);
+    } else {
+      console.log('An error occurred:', error);
+    }
+  }
+};
+
 
       if (userToken) {
         return <Navigate to="/admin" />
@@ -86,7 +91,7 @@ export default function SingUP() {
       
   return (
 <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+<Container component="main" maxWidth="xs" sx={{ width:800,display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <CssBaseline />
         <Box
           sx={{
@@ -115,7 +120,11 @@ export default function SingUP() {
                 autoFocus
                 value={formData.pressing_name}
                 onChange={handleChange}
+                error={!!formErrors.pressing_name}
               />
+              {formErrors.pressing_name && (
+                  <FormHelperText error>{formErrors.pressing_name}</FormHelperText>
+                )}
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -128,7 +137,11 @@ export default function SingUP() {
                 autoComplete="family-name"
                 value={formData.tva}
                 onChange={handleChange}
+                error={!!formErrors.tva}
               />
+              {formErrors.tva && (
+                  <FormHelperText error>{formErrors.tva}</FormHelperText>
+                )}
             </Grid>
             {/* <Grid item xs={12}>
               <TextField
@@ -153,7 +166,11 @@ export default function SingUP() {
                   autoComplete="address-line1"
                   value={formData.address}
                   onChange={handleChange}
+                  error={!!formErrors.address}
                 />
+                {formErrors.address && (
+                  <FormHelperText error>{formErrors.address}</FormHelperText>
+                )}
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -165,7 +182,11 @@ export default function SingUP() {
                   autoComplete="family-name"
                   value={formData.city}
                   onChange={handleChange}
+                  error={!!formErrors.city}
                 />
+                {formErrors.city && (
+                  <FormHelperText error>{formErrors.city}</FormHelperText>
+                )}
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -177,7 +198,11 @@ export default function SingUP() {
                   autoComplete="family-name"
                   value={formData.country}
                   onChange={handleChange}
+                  error={!!formErrors.country}
                 />
+                {formErrors.country && (
+                  <FormHelperText error>{formErrors.country}</FormHelperText>
+                )}
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -190,7 +215,11 @@ export default function SingUP() {
                   autoComplete="family-name"
                   value={formData.postal_code}
                   onChange={handleChange}
+                  error={!!formErrors.postal_code}
                 />
+                {formErrors.postal_code && (
+                  <FormHelperText error>{formErrors.postal_code}</FormHelperText>
+                )}
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -203,7 +232,11 @@ export default function SingUP() {
                   autoComplete="tel"
                   value={formData.phone}
                   onChange={handleChange}
+                  error={!!formErrors.phone}
                 />
+                {formErrors.phone && (
+                  <FormHelperText error>{formErrors.phone}</FormHelperText>
+                )}
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -215,7 +248,11 @@ export default function SingUP() {
                   autoComplete="email"
                   value={formData.email}
                   onChange={handleChange}
+                  error={!!formErrors.email}
                 />
+                {formErrors.email && (
+                  <FormHelperText error>{formErrors.email}</FormHelperText>
+                )}
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -228,14 +265,18 @@ export default function SingUP() {
                   autoComplete="new-password"
                   value={formData.password}
                   onChange={handleChange}
+                  error={!!formErrors.password}
                 />
+                {formErrors.password && (
+                  <FormHelperText error>{formErrors.password}</FormHelperText>
+                )}
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="I want to receive inspiration, marketing promotions and updates via email."
                 />
-              </Grid>
+              </Grid> */}
             </Grid>
             <Button
               type="submit"
@@ -254,7 +295,6 @@ export default function SingUP() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   )

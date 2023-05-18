@@ -7,10 +7,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Box, Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import AddIcon from '@mui/icons-material/Add';
 function Tarif() {
 
   const [articles, setArticles] = useState([]);
@@ -72,109 +72,117 @@ function Tarif() {
         id_service: selectedService,
         id_article: selectedArticle,
       });
-      setTarifs([...tarifs, response.data]);
       setPrice('');
+      const response2= await axiosClient.get("/pressing/tarif");
+      setTarifs(response2.data);
     } catch (error) {
       console.log(error);
     }
   };
 
 return (
-<>
-    <Box component="form" onSubmit={handleAddTarif}>
-      <Grid container spacing={3} sx={{my : 2,justifyContent:'center',alignItems:'center',mx:2}} >
-      <Grid item xs={12} sm={3}>
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
-      <InputLabel id="demo-simple-select-helper-label">Vêtement</InputLabel>
-            <Select
-          labelId="demo-simple-select-helper-label"
-          id="demo-simple-select-helper"
-          label="Vêtement"
-          value={selectedArticle}
-          onChange={handleChangeArticle}
-          sx={{width:200} }
-        >
-          {articles.map(article => (
-          <MenuItem key={article.id} value={article.id}>
-            {article.name}
-          </MenuItem>
-      ))}
-        </Select>
+<Box sx={{minWidth: 800, overflow: 'auto'}}>
+  <Box component="form" onSubmit={handleAddTarif} sx={{my: 2}}>
+    <Grid container spacing={2} alignItems="center">
+      <Grid item xs={12} sm={4}>
+        <FormControl fullWidth sx={{mr: {xs: 0, sm: 2}}}>
+          <InputLabel>Vêtement</InputLabel>
+          <Select
+            value={selectedArticle}
+            onChange={handleChangeArticle}
+            label="Vêtement"
+          >
+            {articles.map(article => (
+              <MenuItem key={article.id} value={article.id}>
+                {article.name}
+              </MenuItem>
+            ))}
+          </Select>
         </FormControl>
-            </Grid>
-          <Grid item xs={12} sm={3} >
-            <TextField 
-              label="Prix" 
-              id="outlined-size-normal" 
-              type="number" 
-              value={price}
-              onChange={(event) => setPrice(event.target.value)}
-            />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel id="demo-simple-select-helper-label">Service</InputLabel>
-              <Select
-                  label="Service"
-                  value={selectedService}
-                  onChange={handleChangeService}
-                  sx={{width:200} }
-                >
-                  {services.map(service => (
-                  <MenuItem key={service.id} value={service.id}>
-                    {service.name}
-                  </MenuItem>
-              ))}
-            </Select>
-         </FormControl>
-            </Grid>
-           
-          <Grid item xs={12} sm={3} sx={{}}>
-            <Button type='submit' size='large' variant='outlined' style={{color:'white',backgroundColor: '#8e24aa',borderColor:'#e1bee7'}}>Ajouter</Button>
-          </Grid>
-            
-          </Grid>
-      </Box>
-<TableContainer component={Paper} sx={{mt : 5}}>
-      <Table sx={{ minWidth: 900 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">Vétement </TableCell>
-            <TableCell align="center">Prix</TableCell>
-            <TableCell align="center">Service</TableCell>
-            <TableCell align="center">Action</TableCell>
-          </TableRow>
-        </TableHead>
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <FormControl fullWidth sx={{mr: {xs: 0, sm: 2}}}>
+          <InputLabel>Service</InputLabel>
+          <Select
+            value={selectedService}
+            onChange={handleChangeService}
+            label="Service"
+          >
+            {services.map(service => (
+              <MenuItem key={service.id} value={service.id}>
+                {service.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={2}>
+        <TextField
+          fullWidth
+          label="Prix"
+          type="number"
+          value={price}
+          onChange={(event) => setPrice(event.target.value)}
+        />
+      </Grid>
+      <Grid item xs={12} sm={2}>
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+          type="submit"
+        >
+          Ajouter
+        </Button>
+      </Grid>
+    </Grid>
+  </Box>
 
-        <TableBody>
-          {tarifs && tarifs.map((tarif) => (
-            <TableRow
-              key={tarif.id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell align='center'>
-              {tarif.article.name}
-              </TableCell>
-              <TableCell align="center">
-                {tarif.price}
-              </TableCell>
-              <TableCell align="center">
-                  {tarif.service.name}
-              </TableCell>
-              <TableCell align="center">
-              <IconButton color="secondary" aria-label="add an alarm">
-                <EditIcon />
-              </IconButton>
-              <IconButton color="primary" aria-label="add to shopping cart">
-                <DeleteIcon />
-              </IconButton>
-              </TableCell>
+  <Box sx={{mt: 5}}>
+    {tarifs.length === 0 ? (
+      <Typography variant="body2" sx={{textAlign: 'center'}}>
+        Aucun tarif trouvé.
+      </Typography>
+    ) : (
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Vêtement</TableCell>
+              <TableCell>Service</TableCell>
+              <TableCell>Prix</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-</>
+          </TableHead>
+          <TableBody>
+            {tarifs.map((tarif) => (
+              <TableRow key={tarif.id}>
+                <TableCell>{tarif.article.name}</TableCell>
+                <TableCell>{tarif.service.name}</TableCell>
+                <TableCell>{tarif.price}</TableCell>
+                <TableCell>
+                  <IconButton
+                    aria-label="modifier"
+                   
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    aria-label="supprimer"
+                    // onClick={() => handleDeleteTarif(tarif)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    )}
+  </Box>
+</Box>
+
 )
 }
 

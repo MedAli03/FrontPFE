@@ -1,161 +1,157 @@
-import React, { useState, useEffect } from "react";
-import axiosClient from "../axios";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import React, { useEffect ,useState} from 'react'
+import axiosClient from '../axios';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { Button,Container,Modal,Typography,Box, TextField } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
-function Article() {
-  const [articles, setArticles] = useState([]);
-  const [newArticle, setNewArticle] = useState("");
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const [ouvrir, setOuvrir] = React.useState(false);
-  const handleOuvrir = () => setOuvrir(true);
-  const handleFermer = () => setOuvrir(false);
+import { Button, IconButton, TextField, Typography } from '@mui/material';
+import DoneIcon from '@mui/icons-material/Done';
+import ClearIcon from '@mui/icons-material/Clear';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4
-  };
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
+
+
+function Articles() {
+
+  const [articles, setArticles] = useState([]);
+  const [requestArticle, setRequestArticle] = useState([]);
+  const [newArticle, setNewArticle] = useState("");
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axiosClient.get("/admin/articles/show");
-        setArticles(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchData();
-  }, []);
-
-  
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
+  const fetchArticle = async () => {
     try {
-      await axiosClient.post('/admin/articles/add', {
-        name: newArticle,
-      });
-      setArticles([...articles,newArticle ]);
-      setNewArticle("")
+      const response = await axiosClient.get("/admin/articles");
+      setArticles(response.data);
     } catch (error) {
       console.error(error);
     }
   };
-  
-  const updateArticle = async (id, data) => {
+
+  fetchArticle();
+}, []);
+
+
+  useEffect(() => {
+    const fetchArticle = async () => {
+      try {
+        const response = await axiosClient.get("/admin/articles/getnotavailable");
+        setRequestArticle(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchArticle();
+  }, []);
+
+  const makeAvailable = async (id) => {
     try {
-      const response = await axiosClient.put(`/admin/articles/edit/${id}`, data);
-      return setArticles(response.data)
+      const response = await axiosClient.put(`/admin/articles/edit/${id}`);
+      const updatedArticle = articles.filter((row) => row.id !== id);
+      setArticles(updatedArticle);
+  
+      const updatedDemand = requestArticle.filter((row) => row.id !== id);
+      setRequestArticle(updatedDemand);
+  
+      const response2 = await axiosClient.get("/admin/articles");
+      setArticles(response2.data);
+  
+      return response.data;
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
+      return error.response.data;
     }
   };
+  
+
+  
+  const addService = async () => {
+    try {
+      const response = await axiosClient.post("/admin/articles/add", {
+        name: newArticle
+      });
+  
+      // Make a new request to get the updated list of services
+      const updatedServicesResponse = await axiosClient.get("/admin/articles");
+      setArticles(updatedServicesResponse.data);
+      setNewArticle('')
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return error
+    }
+  };
+  
+  const deleteArticle = async (id) => {
+  try {
+    const response = await axiosClient.delete(`/admin/articles/delete/${id}`);
+
+    // Make new requests to get the updated lists of services and demands
+    const updatedServicesResponse = await axiosClient.get("/admin/articles");
+    setArticles(updatedServicesResponse.data);
+
+    const updatedDemandsResponse = await axiosClient.get("/admin/articles/getnotavailable");
+    setRequestArticle(updatedDemandsResponse.data);
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return error.response.data;
+  }
+};
 
   return (
-    <Container sx={{ display: 'flex', height: '100vh' }}>
-
-       <TableContainer component={Paper} sx={{mr:3}}>
-      <Table sx={{ minWidth: 950 }} size="small" aria-label="a dense table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">Nom</TableCell>
-            <TableCell align="center">Action</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {articles.map((a) => (
-            <TableRow
-              key={a.id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row" align="center" >
-                {a.name}
-              </TableCell>
-              <TableCell align="center">
-                <Button variant="contained" size="small" onClick={handleOuvrir}>
-                  <EditIcon />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-
-      </Table>
-    </TableContainer>
-    <div>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h4" sx={{mb:4}} >
-            Ajouter nouveau article :
-          </Typography>
-          <TextField
-          value={newArticle} onChange={(e) => setNewArticle(e.target.value)}
-          sx={{mr:2}}
-          required
-          label="Nom d'article"
-        />
-        <Button onClick={(e) => {
-            handleSubmit(e);
-            handleClose();
-          }} variant="contained">
-          Ajouter
-        </Button>
-        </Box>
-      </Modal>
-    </div>
-    <div>
-      <Modal
-        open={ouvrir}
-        onClose={handleFermer}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h4" sx={{mb:4}} >
-            Modifier
-          </Typography>
-          <TextField
-          value={newArticle} onChange={(e) => setNewArticle(e.target.value)}
-          sx={{mr:2}}
-          required
-          label="Nom d'article"
-        />
-        <Button onClick={(e) => {
-            updateArticle(e);
-            handleFermer();
-          }} variant="contained">
-          Modifier
-        </Button>
-        </Box>
-      </Modal>
-    </div>
-    <Button onClick={handleOpen} variant="contained" size="medium" sx={{ mb: 2,mt: 2, display: 'flex', justifyContent: 'center' }}>
+<>
+  <Box sx={{ my: 2, mx: 2, backgroundColor: '#f7fafc', maxHeight: 450, overflow: 'auto' }}>
+    <Item sx={{ mt: 0, mx: 0, display: 'flex', alignItems: 'center', backgroundColor: '#fff' }}>
+      <TextField sx={{ width: 300, mx: 2 }} required label="Nom de vêtement " value={newArticle} onChange={(e) => setNewArticle(e.target.value)} />
+      <Button variant="outlined" style={{ color: "#fff", borderColor: "#6B46C1", backgroundColor: "#6B46C1" }} sx={{ height: 40 }} onClick={addService}>
         Ajouter
-     </Button>
-   
-    </Container>
-  );
+      </Button>
+    </Item>
+  </Box>
+
+  <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2} sx={{ minWidth: 1050, maxHeight: 390 }}>
+    <Box gridColumn="span 6" sx={{ my: 2, mx: 2, backgroundColor: '#f7fafc', maxHeight: 350, overflow: 'auto' }}>
+      <Item sx={{ mt: 0, mx: 0, position: "sticky",zIndex:50, top: 0, backgroundColor: '#6B46C1', color: '#fff' }}>
+        <Typography sx={{}}>Liste de vêtements :</Typography>
+      </Item>
+
+      {articles.map((article) => (
+        <Item key={article.id} sx={{ my: 2, mx: 1, backgroundColor: '#fff', color: '#000', display: 'flex', alignItems: 'center' }}>
+          <div>{article.name}</div>
+          <IconButton onClick={() => deleteArticle(article.id)} sx={{ color: '#8B5CF6', marginLeft: 'auto' }}><DeleteIcon /></IconButton>
+        </Item>
+      ))}
+
+    </Box>
+
+    <Box gridColumn="span 6" sx={{ my: 2, mx: 2, backgroundColor: '#f7fafc', maxHeight: 350, overflow: 'auto' }}>
+      <Item sx={{ mt: 0, mx: 0, position: "sticky",zIndex:50, top: 0, backgroundColor: '#6B46C1', color: '#fff' }}>
+        <Typography sx={{}}>Les demandes :</Typography>
+      </Item>
+      {requestArticle.map((row) => (
+        <Item key={row.id} sx={{ my: 2, mx: 1, px: 2, backgroundColor: '#fff', color: '#000', display: 'flex', alignItems: 'center' }}>
+          <div>{row.name}</div>
+          <IconButton onClick={() => makeAvailable(row.id)} sx={{ marginLeft: 'auto', color: '#34D399' }}><DoneIcon /></IconButton>
+          <IconButton onClick={() => deleteArticle(row.id)} sx={{ color: '#EF4444' }}><ClearIcon /></IconButton>
+        </Item>
+      ))}
+    </Box>
+
+  </Box>
+</>
+
+
+
+  )
 }
 
-export default Article;
+export default Articles
+

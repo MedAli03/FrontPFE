@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import { ListItemButton, ListItemIcon, ListItemText, ListSubheader, Paper } from '@mui/material';
+import { ListItemButton, ListItemIcon, ListItemText, Paper } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
@@ -13,7 +13,6 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -34,21 +33,11 @@ import { UserStateContext } from '../Contexts/ContextProvider';
 import axiosClient from '../axios';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
-// import Chart from './Chart';
-// import Deposits from './Deposits';
+import PressingsList from './PressingsList';
+import PressingAccounts from './PressingAccounts';
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
+
 
 const drawerWidth = 240;
 
@@ -104,6 +93,10 @@ function DashboardContent() {
   const [pressing, setPressing] = React.useState(false);
   const [client, setClient] = React.useState(false);
   const [open, setOpen] = React.useState(true);
+  const [isRendered, setRendered] = React.useState(false);
+  const render = () => {
+    setRendered(true);
+  };
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -119,21 +112,27 @@ function DashboardContent() {
     // }
     const handleArticlesClick = () => {
       navigate('/admin/vêtements');
+      render();
     }
     const handlePressingRequestClick = () => {
       navigate('/admin/pressingrequest');
+      render();
     }
     const handlePressingAccountsClick = () => {
       navigate('/admin/comptespressing');
+      render();
     }
     const handleServiceClick = () => {
       navigate('/admin/services');
+      render();
     }
     const handleSettingsClick = () => {
       navigate('/admin/settings');
+      render();
     }
     const handleclientsClick = () => {
       navigate('/admin/clients');
+      render();
     }
     const handlePressingClick = () => {
       setPressing(!pressing);
@@ -327,15 +326,14 @@ function DashboardContent() {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container >
               
-              {/* Recent Orders */}
+           
               <Grid item xs={12} md={9} lg={12} sx={{ display: 'flex', justifyContent: 'center',width: '100%'}}>
                 <Paper >
-                  <Outlet/>
+                  {isRendered ? <Outlet /> : <PressingAccounts />}
                 </Paper>
               </Grid>
 
             </Grid>
-            <Copyright sx={{ pt: 4 }} />
           </Container>
         </Box>
       </Box>

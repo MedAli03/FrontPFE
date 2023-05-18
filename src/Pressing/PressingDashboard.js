@@ -27,6 +27,7 @@ import ThumbsUpDownIcon from '@mui/icons-material/ThumbsUpDown';
 import { UserStateContext } from '../Contexts/ContextProvider';
 import PaidTwoToneIcon from '@mui/icons-material/PaidTwoTone';
 import axiosClient from '../axios';
+import Commandes from './Commandes';
 
 // import Chart from './Chart';
 // import Deposits from './Deposits';
@@ -96,6 +97,10 @@ function PressingDashboard() {
 
   const { setCurrentUser, setUserToken } = UserStateContext();
   const { userToken } =UserStateContext();
+  const [isCommandeRendered, setIsCommandeRendered] = React.useState(false);
+  const renderCommande = () => {
+    setIsCommandeRendered(true);
+  };
 
   // const [client, setClient] = React.useState(false);
   const [open, setOpen] = React.useState(true);
@@ -111,19 +116,24 @@ function PressingDashboard() {
 
     const handleNotaionsClick = () => {
       navigate('/pressingdashboard/notation');
+      renderCommande();
     }
 
     const handleArticlesClick = () => {
       navigate('/pressingdashboard/vêtements');
+      renderCommande();
     }
     const handleCommandesClick = () => {
       navigate('/pressingdashboard/commandes');
+      renderCommande();
     }
     const handleServicesClick = () => {
       navigate('/pressingdashboard/services');
+      renderCommande();
     }
     const handleTarifClick = () => {
       navigate('/pressingdashboard/tarif');
+      renderCommande();
     }
 
     // const handleClientClick = () => {
@@ -154,14 +164,14 @@ function PressingDashboard() {
           <ListItemText primary="Dashboard" />
       </ListItemButton>
 
-      <ListItemButton onClick={handleCommandesClick}>
+      <ListItemButton onClick={() => {handleCommandesClick()}}>
         <ListItemIcon>
           <ListAltIcon />
         </ListItemIcon>
         <ListItemText primary="Commandes" />
       </ListItemButton>
 
-      <ListItemButton onClick={handleServicesClick} >
+      <ListItemButton onClick={() => {handleServicesClick();}} >
           <ListItemIcon>
             <HandshakeOutlinedIcon />
           </ListItemIcon>
@@ -277,18 +287,14 @@ function PressingDashboard() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container >
-              
-              {/* Recent Orders */}
-              <Grid item xs={12} md={9} lg={12} sx={{ display: 'flex', justifyContent: 'center',width: '100%'}}>
-                <Paper >
-                  <Outlet/>
-                </Paper>
-              </Grid>
-
-            </Grid>
-            {/* <Copyright sx={{ pt: 4 }} /> */}
-          </Container>
+      <Grid container>
+        <Grid item xs={12} md={9} lg={12} sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <Paper>
+            <Outlet/>
+          </Paper>
+        </Grid>
+      </Grid>
+    </Container>
         </Box>
       </Box>
     </ThemeProvider>

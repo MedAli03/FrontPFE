@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import axiosClient from '../axios'
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import axiosClient from '../axios';
 import Rating from '@mui/material/Rating';
-import { Typography } from '@mui/material';
-
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
 
 function Ratings() {
-
   const [ratings, setRatings] = useState([]);
   const [averageRating, setAverageRating] = useState(null);
   const [numRatings, setNumRatings] = useState(null);
@@ -47,41 +43,41 @@ function Ratings() {
   }, []);
 
   return (
-    <>
-      <Typography sx={{my : 1 , mx:2}}>Notation Total : <Rating sx={{mb : 1 , mx:2}} name="half-rating-read" value={averageRating} precision={0.1} readOnly /> </Typography>
-      
-      <Typography sx={{my : 1 , mx:2}}>Nombre de clients qui notent : {numRatings}  </Typography>
-      <TableContainer component={Paper} sx={{maxHeight:400}}>
-      <Table sx={{ minWidth: 850 }} size="small" aria-label="a dense table">
-        <TableHead>
-          <TableRow>
-            <TableCell align='center'>Nom du client</TableCell>
-            <TableCell align="center">Notation</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {ratings.map((row) => (
-            <TableRow
-              key={row.id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row" align='center'>
-              {row.client.first_name}
-              </TableCell>
-              <TableCell align="center">
-                <Rating
-                  name="simple-controlled"
-                  value={row.value}
-                  readOnly 
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center',minWidth:700 }}>
+      <Typography sx={{ mt: 2, mb: 1, color: 'black' }}>
+        Notation totale :{' '}
+        <Rating
+          sx={{ mb: 1 }}
+          name="half-rating-read"
+          value={averageRating}
+          precision={0.1}
+          readOnly
+        />
+      </Typography>
+      <Typography sx={{ mb: 2, color: 'black' }}>
+        Nombre de clients qui ont noté : {numRatings}
+      </Typography>
+      <Box sx={{ width: '100%', maxWidth: 360 }}>
+        <List sx={{ bgcolor: 'background.paper', borderRadius: 2 }}>
+          {ratings.map((row, index) => (
+            <React.Fragment key={row.id}>
+              <ListItem>
+                <ListItemText
+                  primary={
+                    <Typography sx={{ fontWeight: 'bold' }}>
+                      {`${row.client.first_name} ${row.client.last_name}`}
+                    </Typography>
+                  }
+                  secondary={<Rating value={row.value} readOnly />}
                 />
-      </TableCell>
-            </TableRow>
+              </ListItem>
+              {index !== ratings.length - 1 && <Divider variant="inset" component="li" />}
+            </React.Fragment>
           ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    </>
-  )
+        </List>
+      </Box>
+    </Box>
+  );
 }
 
-export default Ratings
+export default Ratings;

@@ -25,7 +25,7 @@ function Settings() {
         <React.Fragment>
         <Container sx={{px:3,py:2 }}>
           <Typography variant="h6" gutterBottom>
-            Shipping address
+            Information personnel :
           </Typography>
           <Grid container spacing={3} >
             <Grid item xs={12} sm={6}>
