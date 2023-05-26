@@ -82,6 +82,7 @@ function PressingsList() {
           <TableHead>
             <TableRow>
               <TableCell>Nom</TableCell>
+              <TableCell>CIN</TableCell>
               <TableCell>Telephone</TableCell>
               <TableCell>TVA</TableCell>
               <TableCell>Adress</TableCell>
@@ -94,6 +95,7 @@ function PressingsList() {
             {pressings.map((pressing) => (
               <TableRow key={pressing.id}>
                 <TableCell>{pressing.pressing_name}</TableCell>
+                <TableCell>{pressing.cin}</TableCell>
                 <TableCell>{pressing.phone}</TableCell>
                 <TableCell>{pressing.tva}</TableCell>
                 <TableCell>{pressing.address}</TableCell>

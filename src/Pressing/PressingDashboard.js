@@ -28,7 +28,7 @@ import { UserStateContext } from '../Contexts/ContextProvider';
 import PaidTwoToneIcon from '@mui/icons-material/PaidTwoTone';
 import axiosClient from '../axios';
 import Commandes from './Commandes';
-
+import ReceiptIcon from '@mui/icons-material/Receipt';
 // import Chart from './Chart';
 // import Deposits from './Deposits';
 
@@ -135,6 +135,10 @@ function PressingDashboard() {
       navigate('/pressingdashboard/tarif');
       renderCommande();
     }
+    const handleFacturesClick = () => {
+      navigate('/pressingdashboard/factures');
+      renderCommande();
+    }
 
     // const handleClientClick = () => {
     //   setClient(!client);
@@ -197,6 +201,12 @@ function PressingDashboard() {
             <ThumbsUpDownIcon />
           </ListItemIcon>
           <ListItemText primary="Notation" />
+      </ListItemButton>
+      <ListItemButton  onClick={handleFacturesClick} >
+          <ListItemIcon>
+            <ReceiptIcon />
+          </ListItemIcon>
+          <ListItemText primary="Factures" />
       </ListItemButton>
 
       </React.Fragment>

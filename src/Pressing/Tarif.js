@@ -67,7 +67,7 @@ function Tarif() {
 
   const handleAddTarif = async () => {
     try {
-      const response = await axiosClient.post('/pressing/tarif/ajouter', {
+      await axiosClient.post('/pressing/tarif/ajouter', {
         price: price,
         id_service: selectedService,
         id_article: selectedArticle,

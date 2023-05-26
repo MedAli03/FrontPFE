@@ -18,6 +18,7 @@ import Commandes from "./Pressing/Commandes";
 import PressingAccounts from "./Admin/PressingAccounts";
 import Tarif from "./Pressing/Tarif";
 import Settings from "./Admin/Settings";
+import Factures from "./Pressing/Factures";
 const router = createBrowserRouter([
     {
         path: '/admin',
@@ -87,8 +88,11 @@ const router = createBrowserRouter([
             {
                 path: 'tarif',
                 element: <Tarif />
+            },
+            {
+                path: 'factures',
+                element: <Factures />
             }
-
         ]
     },
 

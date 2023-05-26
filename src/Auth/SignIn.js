@@ -37,11 +37,11 @@ export default function SignIn() {
   const { setCurrentUser, setUserToken } = UserStateContext();
   const { userToken } = UserStateContext();
   const { userRole , setUserRole} = UserStateContext();
-  const [email, setEmail] = useState('');
+  const [cin, setCin] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
+  const handleCinChange = (event) => {
+    setCin(event.target.value);
   };
 
   const handlePasswordChange = (event) => {
@@ -52,7 +52,7 @@ export default function SignIn() {
     event.preventDefault();
 
       await axiosClient.post("/login", {
-        email,
+        cin,
         password,
         
       }).then(({data}) => {
@@ -62,7 +62,7 @@ export default function SignIn() {
      
       }).catch((error) => {
       if (error.response.status === 401) {
-        console.log('Invalid email or password');
+        console.log('Invalid cin or password');
       } else if (error.response.status === 403) {
         console.log('Account is inactive');
       } else {
@@ -103,13 +103,13 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="cin"
+              label="CIN"
+              name="cin"
+              autoComplete="family-name"
               autoFocus
-              value={email}
-              onChange={handleEmailChange}
+              value={cin}
+              onChange={handleCinChange}
             />
             <TextField
               margin="normal"

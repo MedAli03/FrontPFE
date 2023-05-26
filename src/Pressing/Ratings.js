@@ -43,19 +43,19 @@ function Ratings() {
   }, []);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center',minWidth:700 }}>
-      <Typography sx={{ mt: 2, mb: 1, color: 'black' }}>
-        Notation totale :{' '}
-        <Rating
-          sx={{ mb: 1 }}
-          name="half-rating-read"
-          value={averageRating}
-          precision={0.1}
-          readOnly
-        />
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 700 }}>
+      <Typography variant="h6" sx={{ mt: 2, mb: 1, color: 'black' }}>
+        Notation totale:
       </Typography>
-      <Typography sx={{ mb: 2, color: 'black' }}>
-        Nombre de clients qui ont noté : {numRatings}
+      <Rating
+        sx={{ mb: 2 }}
+        name="half-rating-read"
+        value={averageRating}
+        precision={0.1}
+        readOnly
+      />
+      <Typography variant="subtitle1" sx={{ mb: 2, color: 'black' }}>
+        Nombre de clients qui ont noté: {numRatings}
       </Typography>
       <Box sx={{ width: '100%', maxWidth: 360 }}>
         <List sx={{ bgcolor: 'background.paper', borderRadius: 2 }}>
@@ -64,11 +64,18 @@ function Ratings() {
               <ListItem>
                 <ListItemText
                   primary={
-                    <Typography sx={{ fontWeight: 'bold' }}>
+                    <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                       {`${row.client.first_name} ${row.client.last_name}`}
                     </Typography>
                   }
-                  secondary={<Rating value={row.value} readOnly />}
+                  secondary={
+                    <>
+                      <Rating value={row.value} readOnly />
+                      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
+                        {row.created_at}
+                      </Typography>
+                    </>
+                  }
                 />
               </ListItem>
               {index !== ratings.length - 1 && <Divider variant="inset" component="li" />}

@@ -30,14 +30,13 @@ export default function SingUP() {
     country: yup.string().required('Country is required'),
     postal_code: yup.number().required('Postal code is required'),
     phone: yup.number().min(8, 'Phone must be at least 8 numbers').required('Phone number is required'),
-    email: yup.string().email('Invalid email').required('Email is required'),
+    cin: yup.number().min(8, 'CIN must be at least 8 numbers').required('CIN number is required'),
     password: yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
   });
   
 
   const initialFormData = {
     role: 'pressing',
-    email: '',
     cin: '',
     phone: '',
     password: '',
@@ -144,17 +143,7 @@ const handleSubmit = async (event) => {
                 )}
             </Grid>
             {/* <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                id="cin"
-                label="CIN"
-                name="cin"
-                type="number"
-                autoComplete="family-name"
-                value={formData.cin}
-                onChange={handleChange}
-              />
+              
             </Grid> */}
               <Grid item xs={12}>
                 <TextField
@@ -239,19 +228,19 @@ const handleSubmit = async (event) => {
                 )}
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  error={!!formErrors.email}
-                />
-                {formErrors.email && (
-                  <FormHelperText error>{formErrors.email}</FormHelperText>
+              <TextField
+                required
+                fullWidth
+                id="cin"
+                label="CIN"
+                name="cin"
+                type="number"
+                autoComplete="family-name"
+                value={formData.cin}
+                onChange={handleChange}
+              />
+                {formErrors.cin && (
+                  <FormHelperText error>{formErrors.cin}</FormHelperText>
                 )}
               </Grid>
               <Grid item xs={12}>

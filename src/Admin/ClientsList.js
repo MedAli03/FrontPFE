@@ -42,7 +42,7 @@ function ClientsList() {
       return client.first_name.toLowerCase().includes(searchQuery.toLowerCase());
     } else if (searchBy === 'Prénom') {
       return client.last_name.toLowerCase().includes(searchQuery.toLowerCase());
-    } else if (searchBy === 'Email') {
+    } else if (searchBy === 'CIN') {
       return client.email.toLowerCase().includes(searchQuery.toLowerCase());
     }else if (searchBy === 'Adress') {
       return client.address.toLowerCase().includes(searchQuery.toLowerCase());
@@ -99,7 +99,7 @@ function ClientsList() {
         >
           <MenuItem value="Nom">Nom</MenuItem>
           <MenuItem value="Prénom">Prénom</MenuItem>
-          <MenuItem value="Email">Email</MenuItem>
+          <MenuItem value="Email">CIN</MenuItem>
           <MenuItem value="Adress">Adress</MenuItem>
           <MenuItem value="Ville">Ville</MenuItem>
           <MenuItem value="Pays">Pays</MenuItem>
@@ -113,7 +113,7 @@ function ClientsList() {
           <TableRow>
             <TableCell>Nom</TableCell>
             <TableCell >Prénom</TableCell>
-            <TableCell >Email</TableCell>
+            <TableCell >CIN</TableCell>
             <TableCell >Adress</TableCell>
             <TableCell >Ville</TableCell>
             <TableCell >Pays</TableCell>
@@ -128,7 +128,7 @@ function ClientsList() {
             >
               <TableCell component="th" scope="row">{client.first_name}</TableCell>
               <TableCell >{client.last_name}</TableCell>
-              <TableCell >{client.email}</TableCell>
+              <TableCell >{client.cin}</TableCell>
               <TableCell >{client.address}</TableCell>
               <TableCell >{client.city}</TableCell>
               <TableCell >{client.country}</TableCell>
