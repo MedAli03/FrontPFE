@@ -24,6 +24,7 @@ function Factures() {
   const [modalOpen, setModalOpen] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [selectedFacture, setSelectedFacture] = useState(null);
+  const [idState, setId] = useState(null);
 
   useEffect(() => {
     async function fetchFactures() {
@@ -40,15 +41,20 @@ function Factures() {
   }, []);
 
   const markFactureAsPaid = async (id) => {
-    try {
-      const response = await axiosClient.put(`/pressing/facture/${id}`);
-      const updatedFacture = response.data;
-      // Handle the updated facture data
-      console.log(updatedFacture);
-    } catch (error) {
-      // Handle the error
-      console.log(error);
-    }
+       await axiosClient.put(`/pressing/facture/${id}`);
+      const updatedFactures = factures.map((facture) => {
+        if (facture.id === id) {
+          return {
+            ...facture,
+            status: 'payé',
+          };
+        }
+        return facture;
+      });
+      setFactures(updatedFactures);
+      closePaymentModal();
+      
+      
   };
 
   const handleSearchByChange = (event) => {
@@ -56,18 +62,19 @@ function Factures() {
   };
 
   const filteredFactures = factures.filter((facture) => {
-    if (searchQuery === '') {
+    if (searchQuery === null) {
       return true;
     }
-
+  
     if (searchBy === 'Numéro') {
       return facture.numero.toLowerCase().includes(searchQuery.toLowerCase());
     } else if (searchBy === 'CIN') {
-      return facture.client.cin.toLowerCase().includes(searchQuery.toLowerCase());
+      return facture.client.cin.toString().includes(searchQuery.toString());
     }
-
+  
     return true;
   });
+  
 
   const getOptionList = () => {
     switch (searchBy) {
@@ -85,7 +92,8 @@ function Factures() {
     setModalOpen(false);
   };
 
-  const handlePayment = () => {
+  const handlePayment = (id) => {
+    setId(id)
     setPaymentModalOpen(true);
   };
 
@@ -131,7 +139,7 @@ function Factures() {
           </Select>
         </FormControl>
       </Container>
-      <Grid container sx={{ maxWidth: '100%', overflowX: 'auto' }}>
+      <Grid container sx={{ width: '100%' }}>
         <Grid item xs={12}>
           <Grid container sx={{ p: 2 }}>
             <Grid item xs={2}>
@@ -211,31 +219,32 @@ function Factures() {
         >
           <Typography variant="h6">Détails de facture :</Typography>
           {selectedFacture && (
-         <div>
-         <Typography>
-           Selected Facture: {selectedFacture.numero}
-         </Typography>
-         <Typography>
-           Nom du client: {selectedFacture.client.first_name}
-         </Typography>
-         <Typography>
-           CIN: {selectedFacture.client.cin}
-         </Typography>
-         <Typography>
-           Status: {selectedFacture.status}
-         </Typography>
-         <Typography>
-           Nom du pressing: {selectedFacture.pressing.pressing_name}
-         </Typography>
-         <Typography>
-           Prix Total: {selectedFacture.commande.total_price} DT
-         </Typography>
-         <Button variant='outlined' sx={{ mt: 3 }} onClick={closeModal}>
-           Imprimer
-         </Button>
-       </div>
-       
-          
+            <div>
+              <Typography>
+                Selected Facture: {selectedFacture.numero}
+              </Typography>
+              <Typography>
+                Nom du client: {selectedFacture.client.first_name}
+              </Typography>
+              <Typography>
+                CIN: {selectedFacture.client.cin}
+              </Typography>
+              <Typography>
+                Status: {selectedFacture.status}
+              </Typography>
+              <Typography>
+                Nom du pressing: {selectedFacture.pressing.pressing_name}
+              </Typography>
+              <Typography>
+                quantity: {selectedFacture.commande.quantity}
+              </Typography>
+              <Typography>
+                Prix Total: {selectedFacture.commande.total_price} DT
+              </Typography>
+              <Button variant='outlined' sx={{ mt: 3 }} onClick={closeModal}>
+                Imprimer
+              </Button>
+            </div>
           )}
           <Button
             variant='outlined'
@@ -266,18 +275,16 @@ function Factures() {
           }}
         >
           <Typography variant="h6">Paiement de facture :</Typography>
-          {selectedFacture && (
+          {idState && (
             <Typography variant="body1">
-              Numéro de Facture: {selectedFacture.numero}<br/>
-              Status: {selectedFacture.status}<br/>
-           
-
+              Numéro de Facture: {idState.numero}<br/>
+              Status: {idState.status}<br/>
             </Typography>
           )}
           <Button
             variant="contained"
             sx={{ mt: 3 }}
-            onClick={() => markFactureAsPaid(factures.id)}
+            onClick={() => {markFactureAsPaid(idState.id)}}
           >
             Payer
           </Button>
