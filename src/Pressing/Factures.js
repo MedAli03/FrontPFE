@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Grid,
-  Paper,
   Typography,
   TextField,
   Stack,
@@ -100,6 +99,20 @@ function Factures() {
   const closePaymentModal = () => {
     setPaymentModalOpen(false);
   };
+
+  const imprimer = () => {
+    const content = document.getElementById('print-content');
+    const windowObject = window.open('', '_blank', 'width=800,height=600');
+    windowObject.document.write('<html><head>');
+    windowObject.document.write('<title>Facture</title>');
+    windowObject.document.write('</head><body>');
+    windowObject.document.write(content.innerHTML);
+    windowObject.document.write('</body></html>');
+    windowObject.document.close();
+    windowObject.print();
+    windowObject.close();
+  };
+
 
   return (
     <>
@@ -205,6 +218,7 @@ function Factures() {
       </Grid>
       <Modal open={modalOpen} onClose={closeModal}>
         <Box
+          id="print-content"
           sx={{
             position: 'absolute',
             top: '50%',
@@ -221,7 +235,7 @@ function Factures() {
           {selectedFacture && (
             <div>
               <Typography>
-                Selected Facture: {selectedFacture.numero}
+                Numéro Facture: {selectedFacture.numero}
               </Typography>
               <Typography>
                 Nom du client: {selectedFacture.client.first_name}
@@ -230,18 +244,20 @@ function Factures() {
                 CIN: {selectedFacture.client.cin}
               </Typography>
               <Typography>
-                Status: {selectedFacture.status}
+                Etat: {selectedFacture.status}
               </Typography>
               <Typography>
                 Nom du pressing: {selectedFacture.pressing.pressing_name}
               </Typography>
               <Typography>
-                quantity: {selectedFacture.commande.quantity}
+                quantité: {selectedFacture.commande.quantity}
               </Typography>
               <Typography>
                 Prix Total: {selectedFacture.commande.total_price} DT
               </Typography>
-              <Button variant='outlined' sx={{ mt: 3 }} onClick={closeModal}>
+              <Button variant='outlined' sx={{ mt: 3 ,'@media print': {
+                display: 'none',
+              },}} onClick={imprimer}>
                 Imprimer
               </Button>
             </div>
@@ -252,6 +268,9 @@ function Factures() {
               position: 'absolute',
               top: 8,
               right: 8,
+              '@media print': {
+                display: 'none',
+              },
             }}
             onClick={closeModal}
           >
@@ -278,7 +297,7 @@ function Factures() {
           {idState && (
             <Typography variant="body1">
               Numéro de Facture: {idState.numero}<br/>
-              Status: {idState.status}<br/>
+              Etat: {idState.status}<br/>
             </Typography>
           )}
           <Button

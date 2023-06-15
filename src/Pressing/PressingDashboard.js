@@ -29,25 +29,12 @@ import PaidTwoToneIcon from '@mui/icons-material/PaidTwoTone';
 import axiosClient from '../axios';
 import Commandes from './Commandes';
 import ReceiptIcon from '@mui/icons-material/Receipt';
-// import Chart from './Chart';
-// import Deposits from './Deposits';
 
-// function Copyright(props) {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://mui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
+
 
 const drawerWidth = 240;
 
-const AppBar = styled(MuiAppBar, {
+const CustomAppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
@@ -55,6 +42,7 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
+  backgroundColor: '#641bb4', // Custom background color
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
@@ -98,6 +86,7 @@ function PressingDashboard() {
   const { setCurrentUser, setUserToken } = UserStateContext();
   const { userToken } =UserStateContext();
   const [isCommandeRendered, setIsCommandeRendered] = React.useState(false);
+  
   const renderCommande = () => {
     setIsCommandeRendered(true);
   };
@@ -229,40 +218,40 @@ function PressingDashboard() {
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open} sx={{backgroundColor:'#641bb4'}}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              Pressing
-            </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Toolbar>
-        </AppBar>
+        <CustomAppBar position="absolute" open={open}>
+      <Toolbar
+        sx={{
+          pr: '24px', // keep right padding when drawer closed
+        }}
+      >
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="open drawer"
+          onClick={toggleDrawer}
+          sx={{
+            marginRight: '36px',
+            ...(open && { display: 'none' }),
+          }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography
+          component="h1"
+          variant="h6"
+          color="inherit"
+          noWrap
+          sx={{ flexGrow: 1 }}
+        >
+          Pressing
+        </Typography>
+        <IconButton color="inherit">
+          <Badge badgeContent={4} color="secondary">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+      </Toolbar>
+    </CustomAppBar>
         <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
@@ -300,7 +289,7 @@ function PressingDashboard() {
       <Grid container>
         <Grid item xs={12} md={9} lg={12} sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <Paper>
-            <Outlet/>
+          {isCommandeRendered ? <Outlet /> : <Commandes />}
           </Paper>
         </Grid>
       </Grid>

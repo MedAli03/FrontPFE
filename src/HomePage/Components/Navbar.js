@@ -5,7 +5,7 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import HomeIcon from "@mui/icons-material/Home";
 import ContactsIcon from "@mui/icons-material/Contacts";
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
-import logoImg from "../media/logo.png";
+import logoImg from "../media/wa.png";
 import { Container } from "@mui/system";
 
 import {
@@ -45,9 +45,9 @@ export const Navbar = () => {
       onKeyDown={toggleDrawer(anchor, false)}
     >
   <List>
-    {["Accueil", "Services", "Contact", "Devenir partenaire"].map((text, index) => (
+    {["Accueil", "Contact", "Devenir partenaire"].map((text, index) => (
       <ListItem key={text} disablePadding>
-        <ListItemButton component={Link} href={index === 0 ? '/' : index === 1 ? '/services' : index === 2 ? '/contact' : '/register'}>
+        <ListItemButton component={Link} href={index === 0 ? '/'  : index === 2 ? '/contact' : '/register'}>
           <ListItemIcon>
             {index === 0 && <HomeIcon />}
             {index === 1 && <ListAltIcon />}
@@ -133,7 +133,6 @@ export const Navbar = () => {
 
         <NavbarLinksBox>
           <NavLink underline="none" variant="body2">Accueil </NavLink>
-          <NavLink underline="none" variant="body2">Services</NavLink>
           <NavLink underline="none" href="/contact" variant="body2">Contact</NavLink>
           <NavLink underline="none" href="/register" variant="body2">Devenir un partenaire</NavLink>
 

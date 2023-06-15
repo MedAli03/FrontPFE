@@ -37,11 +37,12 @@ export default function SignIn() {
   const { setCurrentUser, setUserToken } = UserStateContext();
   const { userToken } = UserStateContext();
   const { userRole , setUserRole} = UserStateContext();
-  const [cin, setCin] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCinChange = (event) => {
-    setCin(event.target.value);
+    setEmail(event.target.value);
   };
 
   const handlePasswordChange = (event) => {
@@ -50,27 +51,31 @@ export default function SignIn() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-      await axiosClient.post("/login", {
-        cin,
+  
+    setIsLoading(true); // Set loading state to true
+  
+    try {
+      const response = await axiosClient.post("/login", {
+        email,
         password,
-        
-      }).then(({data}) => {
-        setCurrentUser(data.user);
-        setUserToken(data.access_token);
-        setUserRole(data.role);
-     
-      }).catch((error) => {
+      });
+  
+      setCurrentUser(response.data.user);
+      setUserToken(response.data.access_token);
+      setUserRole(response.data.role);
+    } catch (error) {
       if (error.response.status === 401) {
         console.log('Invalid cin or password');
       } else if (error.response.status === 403) {
         console.log('Account is inactive');
       } else {
         console.log('An error occurred:', error);
-      }}
-      )
-    
-    };
+      }
+    }
+  
+    setIsLoading(false); // Set loading state back to false
+  };
+  
 
    
       if (userToken && userRole === 'admin') {
@@ -103,12 +108,12 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="cin"
-              label="CIN"
-              name="cin"
+              id="email"
+              label="Email"
+              name="email"
               autoComplete="family-name"
               autoFocus
-              value={cin}
+              value={email}
               onChange={handleCinChange}
             />
             <TextField
@@ -132,9 +137,11 @@ export default function SignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={isLoading} // Disable the button when loading is true
             >
-              Sign In
+              {isLoading ? 'Loading...' : 'Sign In'}
             </Button>
+
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">

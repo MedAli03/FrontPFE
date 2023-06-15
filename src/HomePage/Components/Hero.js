@@ -38,8 +38,7 @@ const Hero = () => {
             <Typography
               variant="body2"
               sx={{
-                fontSize: "18px",
-                color: "#687690",
+                fontSize: "1.5rem",
                 fontWeight: "500",
                 mt: 10,
                 mb: 4,
@@ -47,7 +46,7 @@ const Hero = () => {
             >
               Bienvenue sur Washify
             </Typography>
-            <Title variant="h1" sx={{ fontSize: '2rem' }}>
+            <Title variant="h1" sx={{ fontSize: '1.5rem' ,color: "#687690"}}>
             La façon la plus simple de réserver un service de nettoyage de vêtements à proximité de chez vous.
             </Title>
 
@@ -65,7 +64,7 @@ const Hero = () => {
             <img
               src={pressing}
               alt="heroImg"
-              style={{ maxWidth: "100%", marginBottom: "2rem" }}
+              style={{ maxWidth: "90%", marginBottom: "2rem" }}
             />
           </Box>
         </CustomBox>

@@ -6,12 +6,46 @@ import Paper from '@mui/material/Paper';
 import { Button, Snackbar, TextField, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
+const Wrapper = styled(Box)(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(12, 1fr)',
+  gap: theme.spacing(2),
+  minWidth: 320,
+  minHeight: 450,
+  [theme.breakpoints.up('sm')]: {
+    minWidth: 600,
+  },
+  [theme.breakpoints.up('md')]: {
+    minWidth: 950,
+  },
+}));
+
+const ListContainer = styled(Box)(({ theme }) => ({
+  my: 2,
+  mx: 2,
+  backgroundColor: '#F5F5F5',
+  maxHeight: 450,
+  overflow: 'auto',
+  borderRadius: 5,
+  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+}));
+
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
+  my: 2,
+  mx: 1,
+  backgroundColor: '#FFFFFF',
+  color: '#424242',
+  borderRadius: 5,
+  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
   padding: theme.spacing(1),
   textAlign: 'center',
-  color: theme.palette.text.secondary,
+}));
+
+const AddItemContainer = styled(Box)(({ theme }) => ({
+  my: 2,
+  mx: 2,
+  borderRadius: 5,
+  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
 }));
 
 function Articles() {
@@ -42,7 +76,9 @@ function Articles() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const existingArticle = articles.find((article) => article.name.toLowerCase() === name.toLowerCase());
+      const existingArticle = articles.find(
+        (article) => article.name.toLowerCase() === name.toLowerCase()
+      );
       if (existingArticle) {
         setIsArticleExist(true);
         return;
@@ -70,34 +106,9 @@ function Articles() {
   };
 
   return (
-    <Box
-      display="grid"
-      gridTemplateColumns="repeat(12, 1fr)"
-      gap={2}
-      sx={{
-        minWidth: 320,
-        minHeight: 450,
-        '@media screen and (min-width: 600px)': {
-          minWidth: 600,
-        },
-        '@media screen and (min-width: 950px)': {
-          minWidth: 950,
-        },
-      }}
-    >
-      <Box
-        gridColumn={{ xs: '1 / -1', md: 'span 6' }}
-        sx={{
-          my: 2,
-          mx: 2,
-          backgroundColor: '#F5F5F5',
-          maxHeight: 450,
-          overflow: 'auto',
-          borderRadius: 5,
-          boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-        }}
-      >
-        <Item sx={{ mt: 1, mx: 1, position: 'sticky', top: 3 }}>
+    <Wrapper>
+      <ListContainer gridColumn={{ xs: '1 / -1', md: 'span 6' }}>
+        <Item sx={{ mt: 1, position: 'sticky', top: 3 }}>
           <Typography variant="h5" sx={{ color: '#424242' }}>
             Liste des vêtements
           </Typography>
@@ -105,40 +116,27 @@ function Articles() {
 
         {articles.length > 0 ? (
           articles.map((article) => (
-            <Item
-              key={article.id}
-              sx={{
-                my: 2,
-                mx: 1,
-                backgroundColor: '#FFFFFF',
-                color: '#424242',
-                borderRadius: 5,
-                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-              }}
-            >
+            <Item key={article.id}>
               <Typography variant="subtitle1">{article.name}</Typography>
             </Item>
           ))
         ) : (
-          <Item sx={{ mx: 1, my: 2 }}>
+          <Item>
             <Typography variant="subtitle1" sx={{ color: '#424242' }}>
               Aucun vêtement trouvé.
             </Typography>
           </Item>
         )}
-      </Box>
+      </ListContainer>
 
-      <Box
-        gridColumn={{ xs: '1 / -1', md: 'span 6' }}
-        sx={{ my: 2, mx: 2, borderRadius: 5, boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
-      >
-        <Item sx={{ my: 2, mx: 1 }}>
+      <AddItemContainer gridColumn={{ xs: '1 / -1', md: 'span 6' }}>
+        <Item>
           <Typography variant="h5" sx={{ color: '#424242' }}>
             Ajouter un vêtement
           </Typography>
         </Item>
 
-        <Item sx={{ my: 2, mx: 1, display: 'flex', alignItems: 'center' }}>
+        <Item sx={{ display: 'flex', alignItems: 'center' }}>
           <TextField
             sx={{ width: '100%', maxWidth: 400, mx: 2 }}
             required
@@ -172,15 +170,15 @@ function Articles() {
           sx={{ backgroundColor: '#43A047' }}
         />
 
-        {isArticleExist && (
-          <Item sx={{ mx: 1, my: 2 }}>
+        {isArticleExist && (  
+          <Item>
             <Typography variant="subtitle1" sx={{ color: 'red' }}>
               Cet article existe déjà.
             </Typography>
           </Item>
         )}
-      </Box>
-    </Box>
+      </AddItemContainer>
+    </Wrapper>
   );
 }
 

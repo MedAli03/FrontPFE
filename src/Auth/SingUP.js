@@ -25,6 +25,7 @@ export default function SingUP() {
   const schema = yup.object().shape({
     pressing_name: yup.string().required('Name is required'),
     tva: yup.number().required('TVA is required'),
+    email: yup.string().required('Email is required').email('Invalid email format'),
     address: yup.string().required('Address is required'),
     city: yup.string().required('City is required'),
     country: yup.string().required('Country is required'),
@@ -37,6 +38,7 @@ export default function SingUP() {
 
   const initialFormData = {
     role: 'pressing',
+    email:'',
     cin: '',
     phone: '',
     password: '',
@@ -241,6 +243,22 @@ const handleSubmit = async (event) => {
               />
                 {formErrors.cin && (
                   <FormHelperText error>{formErrors.cin}</FormHelperText>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="email"
+                label="Email"
+                name="email"
+                type="email"
+                autoComplete="family-name"
+                value={formData.email}
+                onChange={handleChange}
+              />
+                {formErrors.email && (
+                  <FormHelperText error>{formErrors.email}</FormHelperText>
                 )}
               </Grid>
               <Grid item xs={12}>
