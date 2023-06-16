@@ -57,32 +57,34 @@ function Commandes() {
     setSearchBy(event.target.value);
   };
 
-    const filteredCommands = commands.filter((commande) => {
-    if ( commande.status !== status) {
-      return commande.status === 'en attente';
-    }
-  
-    if (searchQuery === '') {
+  const filteredCommands = commands
+    .filter((commande) => {
+      if (commande.status !== status) {
+        return commande.status === 'en attente';
+      }
+
+      if (searchQuery === '') {
+        return true;
+      }
+
+      if (searchBy === 'Nom') {
+        return commande.client.first_name.toLowerCase().includes(searchQuery.toLowerCase());
+      } else if (searchBy === 'CIN') {
+        return commande.client.cin.toString().includes(searchQuery.toString());
+      }
+
       return true;
-    }
-  
-    if (searchBy === 'Nom') {
-      return commande.client.first_name.toLowerCase().includes(searchQuery.toLowerCase());
-    } else if (searchBy === 'CIN') {
-      return commande.client.cin.toString().includes(searchQuery.toString());
-    }
-  
-    return true;
-  }).filter((commande) => {
-    if (status === 'en attente') {
-      return commande.status === 'en attente';
-    } else if (status === 'en cours') {
-      return commande.status === 'en cours';
-    } else if (status === 'terminée') {
-      return commande.status === 'terminée';
-    }
-    return true;
-  });
+    })
+    .filter((commande) => {
+      if (status === 'en attente') {
+        return commande.status === 'en attente';
+      } else if (status === 'en cours') {
+        return commande.status === 'en cours';
+      } else if (status === 'terminée') {
+        return commande.status === 'terminée';
+      }
+      return true;
+    });
 
   const deleteCommand = () => {
     console.log(idState);
@@ -110,9 +112,7 @@ function Commandes() {
     setIsLoading(true);
 
     try {
-      const response = await axiosClient.post(
-        `/pressing/facture/facturer/${id}`
-      );
+      const response = await axiosClient.post(`/pressing/facture/facturer/${id}`);
       // Handle the response or perform any necessary actions
       console.log(response.data);
     } catch (error) {
@@ -255,8 +255,9 @@ function Commandes() {
               <TableCell>Nom de Client</TableCell>
               <TableCell align="center">CIN</TableCell>
               <TableCell align="center">quantité</TableCell>
+              <TableCell align="center">Items</TableCell>
               <TableCell align="center">Prix total</TableCell>
-              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Etat</TableCell>
               <TableCell align="center">Date</TableCell>
               <TableCell align="center">Action</TableCell>
             </TableRow>
@@ -272,6 +273,23 @@ function Commandes() {
                 </TableCell>
                 <TableCell align="center">{row.client.cin}</TableCell>
                 <TableCell align="center">{row.quantity}</TableCell>
+                <TableCell align="center">
+                  {Object.values(row.items).map((item) => (
+                    <div>
+                      <div>{item.article.name}</div>
+                      <div>{item.article.image}</div>
+                      <div>
+                        {item.selectedServices.map((service) => (
+                          <div>
+                            <div>{service.name}</div>
+                            <div>{service.price}</div>
+                            <div>{service.quantity}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </TableCell>
                 <TableCell align="center">{row.total_price}</TableCell>
                 <TableCell align="center">{row.status}</TableCell>
                 <TableCell align="center">{row.created_at}</TableCell>
@@ -347,5 +365,4 @@ function Commandes() {
     </div>
   );
 }
-
 export default Commandes;

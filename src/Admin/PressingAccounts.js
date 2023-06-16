@@ -30,12 +30,13 @@ function PressingAccounts() {
     const fetchActivePressings = async () => {
       try {
         const response = await axiosClient.get('/admin/pressings');
-        setActivePressings(response.data);
+        setActivePressings(response.data.data); // Modify this line
+        
       } catch (error) {
         console.error(error);
       }
     };
-
+  
     fetchActivePressings();
   }, []);
 
@@ -43,28 +44,30 @@ function PressingAccounts() {
     setSearchBy(event.target.value);
   };
 
-  const filteredPressings = activePressings.filter((pressing) => {
-    if (searchQuery === '') {
-      return true;
-    }
-    if (searchBy === 'Nom') {
-      return pressing.pressing_name.toLowerCase().includes(searchQuery.toLowerCase());
-    } else if (searchBy === 'CIN') {
-      return pressing.cin.toString().includes(searchQuery);
-    } else if (searchBy === 'Telephone') {
-      return pressing.phone.includes(searchQuery);
-    } else if (searchBy === 'TVA') {
-      return pressing.tva.includes(searchQuery);
-    } else if (searchBy === 'Adress') {
-      return pressing.address.toLowerCase().includes(searchQuery.toLowerCase());
-    } else if (searchBy === 'Ville') {
-      return pressing.city.toLowerCase().includes(searchQuery.toLowerCase());
-    } else if (searchBy === 'Région') {
-      return pressing.country.toLowerCase().includes(searchQuery.toLowerCase());
-    }
+  const filteredPressings = Array.isArray(activePressings)
+    ? activePressings.filter((pressing) => {
+        if (searchQuery === '') {
+          return true;
+        }
+        if (searchBy === 'Nom') {
+          return pressing.pressing_name.toLowerCase().includes(searchQuery.toLowerCase());
+        } else if (searchBy === 'CIN') {
+          return pressing.cin.toString().includes(searchQuery);
+        } else if (searchBy === 'Telephone') {
+          return pressing.phone.includes(searchQuery);
+        } else if (searchBy === 'TVA') {
+          return pressing.tva.includes(searchQuery);
+        } else if (searchBy === 'Adress') {
+          return pressing.address.toLowerCase().includes(searchQuery.toLowerCase());
+        } else if (searchBy === 'Ville') {
+          return pressing.city.toLowerCase().includes(searchQuery.toLowerCase());
+        } else if (searchBy === 'Région') {
+          return pressing.country.toLowerCase().includes(searchQuery.toLowerCase());
+        }
 
-    return true;
-  });
+        return true;
+      })
+    : [];
 
   const getOptionList = () => {
     switch (searchBy) {
@@ -118,44 +121,50 @@ function PressingAccounts() {
         </FormControl>
       </Container>
 
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 1000, p: 2 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Nom</TableCell>
-              <TableCell>CIN</TableCell>
-              <TableCell>Telephone</TableCell>
-              <TableCell>TVA</TableCell>
-              <TableCell>Adress</TableCell>
-              <TableCell>Ville</TableCell>
-              <TableCell>Région</TableCell>
-              <TableCell align="center">Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredPressings.map((pressing) => (
-              <TableRow key={pressing.id}>
-                <TableCell>{pressing.pressing_name}</TableCell>
-                <TableCell>{pressing.cin}</TableCell>
-                <TableCell>{pressing.phone}</TableCell>
-                <TableCell>{pressing.tva}</TableCell>
-                <TableCell>{pressing.address}</TableCell>
-                <TableCell>{pressing.city}</TableCell>
-                <TableCell>{pressing.country}</TableCell>
-                <TableCell align="center">
-                  <Button
-                    variant="contained"
-                    size="small"
-                    style={{ backgroundColor: 'black', color: 'white' }}
-                  >
-                    <ModeEditIcon />
-                  </Button>
-                </TableCell>
+      {filteredPressings.length === 0 ? (
+        <Typography sx={{ m: 2 }} variant="body1">
+          No pressings found.
+        </Typography>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 1000, p: 2 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Nom</TableCell>
+                <TableCell>CIN</TableCell>
+                <TableCell>Telephone</TableCell>
+                <TableCell>TVA</TableCell>
+                <TableCell>Adress</TableCell>
+                <TableCell>Ville</TableCell>
+                <TableCell>Région</TableCell>
+                <TableCell align="center">Action</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {filteredPressings.map((pressing) => (
+                <TableRow key={pressing.id}>
+                  <TableCell>{pressing.pressing_name}</TableCell>
+                  <TableCell>{pressing.cin}</TableCell>
+                  <TableCell>{pressing.phone}</TableCell>
+                  <TableCell>{pressing.tva}</TableCell>
+                  <TableCell>{pressing.address}</TableCell>
+                  <TableCell>{pressing.city}</TableCell>
+                  <TableCell>{pressing.country}</TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="contained"
+                      size="small"
+                      style={{ backgroundColor: 'black', color: 'white' }}
+                    >
+                      <ModeEditIcon />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </div>
   );
 }
